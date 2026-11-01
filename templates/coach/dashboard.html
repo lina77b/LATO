@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Coach{% endblock %}
+{% block page_title %}Tableau de bord{% endblock %}
+
+{% block extra_css %}
+<style>
+  .nav-icon-wrap svg,
+  .nav-icon-img svg {
+    width: 18px !important;
+    height: 18px !important;
+    display: inline-block;
+    fill: currentColor;
+    vertical-align: middle;
+  }
+
+  .avatar svg,
+  .card-title-icon svg {
+    width: 20px !important;
+    height: 20px !important;
+    display: inline-block;
+    fill: currentColor;
+    vertical-align: middle;
+  }
+
+  .btn svg {
+    width: 14px !important;
+    height: 14px !important;
+    display: inline-block;
+    fill: currentColor;
+    vertical-align: middle;
+  }
+
+  .card-title-custom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+</style>
+{% endblock %}
+
+{% block sidebar_nav %}
+<span class="nav-section-label">Entrainement</span>
+<div class="nav-item">
+  <a class="nav-link-custom active" href="{% url 'coach_dashboard' %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.house|safe }}</span></div>
+    <span>Dashboard</span>
+  </a>
+</div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url 'coach_seances' %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.timer|safe }}</span></div>
+    <span>Mes Seances</span>
+  </a>
+</div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url 'coach_athletes' %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span></div>
+    <span>Mon Groupe</span>
+  </a>
+</div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url 'coach_progressions' %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.chart_line_up|safe }}</span></div>
+    <span>Suivi Athlètes</span>
+  </a>
+</div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url 'ligue_calendrier' %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.calendar|safe }}</span></div>
+    <span>Calendrier</span>
+  </a>
+</div>
+
+{% endblock %}
+
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card p-3 border-0 shadow-sm">
+      <div class="d-flex align-items-center gap-3">
+        <div class="stat-icon-wrap" style="background:rgba(59,130,246,0.1);">
+          <span class="stat-icon-img" style="color:var(--secondary-blue);">{{ ICONS.users_three|safe }}</span>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--text-3);font-weight:600;text-transform:uppercase;">Mon Groupe</div>
+          <div style="font-size:24px;font-weight:800;color:var(--text);">{{ athletes|length }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card p-3 border-0 shadow-sm">
+      <div class="d-flex align-items-center gap-3">
+        <div class="stat-icon-wrap" style="background:rgba(16,185,129,0.1);">
+          <span class="stat-icon-img" style="color:var(--jsk-green);">{{ ICONS.timer|safe }}</span>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--text-3);font-weight:600;text-transform:uppercase;">Séances ce mois</div>
+          <div style="font-size:24px;font-weight:800;color:var(--text);">{{ nb_seances_mois|default:"0" }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card p-4 h-100 border-0 shadow-sm">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="card-title-custom mb-0">
+          <span class="card-title-icon" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span>
+          Mes Athlètes
+        </h6>
+        <a href="{% url 'coach_athletes' %}" class="btn btn-outline-jsk btn-sm">Gérer</a>
+      </div>
+      
+      <div class="d-flex flex-column gap-2">
+        {% for a in athletes %}
+        <div class="d-flex align-items-center justify-content-between p-2 border-bottom">
+          <div class="d-flex align-items-center gap-3">
+            <div class="avatar avatar-sm">{{ a.initiales }}</div>
+            <div>
+              <div style="font-size:13.5px;font-weight:600;">{{ a.nom_complet }}</div>
+              <div style="font-size:11.5px;color:var(--text-3);">{{ a.categorie }} &middot; {{ a.get_sexe_display }}</div>
+            </div>
+          </div>
+          <a href="{% url 'athlete_progression' a.pk %}" class="btn btn-light btn-sm d-flex align-items-center gap-1" title="Voir les progressions">
+            <span class="card-title-icon">{{ ICONS.chart_line_up|safe }}</span>
+          </a>
+        </div>
+        {% empty %}
+        <div class="text-center py-4 text-muted" style="font-size:13px;">Aucun athlète assigné</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card p-4 h-100 border-0 shadow-sm">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="card-title-custom mb-0">
+          <span class="card-title-icon" style="display:inline-flex;align-items:center;">{{ ICONS.timer|safe }}</span>
+          Dernières performances
+        </h6>
+        <a href="{% url 'coach_saisie' %}" class="btn btn-jsk btn-sm">+</a>
+      </div>
+      
+      <div class="d-flex flex-column gap-2">
+        {% for p in perfs_recentes %}
+        <div class="d-flex align-items-center gap-3 py-2 border-bottom">
+          <div class="avatar avatar-sm">{{ p.athlete.initiales }}</div>
+          <div class="flex-grow-1">
+            <div style="font-size:13.5px;font-weight:600;">{{ p.athlete.nom_complet }}</div>
+            <div style="font-size:11.5px;color:var(--text-3);">{{ p.epreuve }} &mdash; {{ p.date|date:"d/m" }}</div>
+          </div>
+          <strong style="color:var(--green);font-family:'Syne',sans-serif;font-size:15px;">{{ p.performance }}</strong>
+        </div>
+        {% empty %}
+        <div class="text-center py-4 text-muted" style="font-size:13px;">Aucune performance enregistrée</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

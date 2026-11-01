@@ -1,0 +1,805 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}LATO{% endblock %} | Ligue d'Athlétisme de Tizi Ouzou</title>
+<head>
+    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.png' %}">
+</head>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary-blue: #1e3a8a;
+    --secondary-blue: #2563eb;
+    --accent-blue: #3b82f6;
+    --blue-glass: rgba(30, 58, 138, 0.08);
+    --gold: #f59e0b;
+    --gold-2: #fbbf24;
+    --gold-dark: #d97706;
+    --sidebar-w: 268px;
+    --topbar-h: 70px;
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --text-2: #334155;
+    --text-3: #94a3b8;
+    --radius: 14px;
+    --radius-sm: 9px;
+    --shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+    --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1);
+    --jsk-green: #10b981;
+  }
+
+  svg { overflow: hidden; vertical-align: middle; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .app-layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: var(--sidebar-w);
+    flex-shrink: 0;
+    background: var(--primary-blue);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    z-index: 200;
+    transition: width .3s cubic-bezier(.4,0,.2,1);
+    overflow: hidden;
+  }
+
+  .sidebar::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -40px;
+    width: 160px; height: 260px;
+    background: rgba(255,255,255,0.04);
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .sidebar-brand {
+    padding: 20px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    position: relative;
+  }
+
+  .sidebar-logo-club-wrap {
+    width: 44px; height: 44px;
+    background: #ffffff;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .sidebar-logo-club { width: 38px; height: 38px; object-fit: contain; }
+
+  .brand-club-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+  }
+  .brand-club-sub {
+    font-size: 11px;
+    color: var(--gold-2);
+    font-weight: 500;
+  }
+
+  .sidebar-athlete-profile {
+    margin: 16px 12px 8px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+  }
+  .profile-avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--gold); color: var(--primary-blue);
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 10px;
+  }
+  .profile-name { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+  .profile-meta { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 12px; }
+  .btn-profile {
+    display: block; background: rgba(255,255,255,0.1); color: #fff;
+    text-decoration: none; font-size: 11px; font-weight: 600;
+    padding: 6px; border-radius: 6px; transition: background 0.2s;
+  }
+  .btn-profile:hover { background: rgba(255,255,255,0.2); color: #fff; }
+
+  .sidebar-nav { flex: 1; padding: 12px 10px; overflow-y: auto; }
+  .sidebar-nav::-webkit-scrollbar { width: 4px; }
+  .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+  .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+
+  .nav-section-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 14px 12px 6px;
+    display: block;
+  }
+
+  .nav-item { margin-bottom: 2px; }
+
+  .nav-link-custom {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    color: rgba(255,255,255,0.65);
+    font-size: 13.5px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all .18s;
+    position: relative;
+    white-space: nowrap;
+  }
+
+  .nav-link-custom:hover {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+  }
+
+  .nav-link-custom.active {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-2) 100%);
+    color: var(--primary-blue);
+    font-weight: 700;
+    box-shadow: 0 4px 16px rgba(245,158,11,0.3);
+  }
+
+  .nav-icon-wrap {
+    width: 26px; height: 26px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .nav-icon-img {
+    width: 18px; height: 18px;
+    object-fit: contain;
+    transition: filter .18s;
+  }
+
+  .nav-link-custom.active .nav-icon-img {
+    filter: brightness(0) saturate(100%) invert(18%) sepia(35%) saturate(3200%) hue-rotate(210deg) brightness(90%) contrast(100%);
+  }
+
+  .nav-badge {
+    margin-left: auto;
+    background: #ef4444;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+    line-height: 1.4;
+  }
+
+  .sidebar-user {
+    padding: 14px 16px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    background: rgba(0,0,0,0.12);
+  }
+
+  .user-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--primary-blue);
+    flex-shrink: 0;
+    border: 2px solid rgba(255,255,255,0.2);
+  }
+
+  .user-name { font-size: 13px; color: #fff; font-weight: 600; }
+  .user-role { font-size: 10px; color: rgba(255,255,255,0.45); }
+
+  .btn-logout {
+    margin-left: auto;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s;
+    opacity: 0.5;
+  }
+  .btn-logout:hover { background: rgba(255,255,255,0.1); opacity: 1; }
+  .btn-logout img { width: 18px; height: 18px; }
+
+  .main-content {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .topbar {
+    height: var(--topbar-h);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    gap: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  }
+
+  .topbar-branding-zone {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .topbar-main-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--primary-blue);
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+    margin: 0;
+  }
+  .topbar-sub-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .topbar-logos-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .topbar-logo-box {
+    height: 40px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .topbar-logo-img { height: 38px; object-fit: contain; }
+  .topbar-logo-img.fed { background: #ffffff; padding: 2px; border: 1px solid var(--border); border-radius: 6px; }
+
+  .search-wrap { position: relative; }
+  .search-icon-img {
+    position: absolute;
+    left: 13px; top: 50%;
+    transform: translateY(-50%);
+    width: 15px; height: 15px;
+    opacity: 0.35;
+  }
+
+  .topbar-search {
+    padding: 8px 14px 8px 38px;
+    border: 1.5px solid var(--border);
+    border-radius: 24px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    width: 180px;
+    outline: none;
+    transition: all .2s;
+    color: var(--text);
+  }
+  .topbar-search:focus {
+    border-color: var(--secondary-blue);
+    background: #fff;
+    width: 220px;
+    box-shadow: 0 0 0 3px var(--blue-glass);
+  }
+
+  .tb-select {
+    padding: 7px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 9px;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    outline: none;
+    cursor: pointer;
+    color: var(--text-2);
+    font-weight: 500;
+  }
+
+  .notif-btn {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    position: relative;
+    transition: all .15s;
+  }
+  .notif-btn:hover { border-color: var(--secondary-blue); background: var(--blue-glass); }
+  .notif-btn img { width: 18px; height: 18px; opacity: 0.65; }
+  .notif-dot {
+    width: 8px; height: 8px;
+    background: #ef4444;
+    border-radius: 50%;
+    position: absolute;
+    top: 5px; right: 5px;
+    border: 2px solid #fff;
+  }
+
+  .notif-panel {
+    position: absolute;
+    top: calc(var(--topbar-h) + 6px);
+    right: 0px;
+    width: 340px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    z-index: 500;
+    display: none;
+  }
+  .notif-panel.open { display: block; animation: fadeDown .15s ease; }
+  @keyframes fadeDown { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+  .notif-header {
+    padding: 14px 18px 10px;
+    border-bottom: 1px solid var(--bg);
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px; font-weight: 700;
+  }
+  .notif-item {
+    display: flex; gap: 10px;
+    padding: 11px 18px;
+    border-bottom: 1px solid var(--bg);
+    cursor: pointer;
+    transition: background .12s;
+  }
+  .notif-item:hover { background: var(--bg); }
+  .notif-item:last-child { border-bottom: none; }
+  .n-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--secondary-blue); flex-shrink: 0; margin-top: 5px; }
+  .n-dot.read { background: var(--border); }
+  .n-text { font-size: 12.5px; color: var(--text-2); line-height: 1.4; }
+  .n-time { font-size: 10.5px; color: var(--text-3); margin-top: 2px; }
+
+  .page-body { flex: 1; padding: 28px; }
+
+  .section-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 24px; font-weight: 800;
+    color: var(--text);
+    line-height: 1.15;
+  }
+  .section-sub { font-size: 13px; color: var(--text-3); margin-top: 3px; }
+
+  .stat-card {
+    border-radius: 16px;
+    padding: 22px 22px 18px;
+    position: relative;
+    overflow: hidden;
+    border: none;
+  }
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    right: -16px; top: -16px;
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+  }
+  .stat-card.green { background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%); color: #fff; }
+  .stat-card.yellow { background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%); color: var(--primary-blue); }
+  .stat-card.red { background: linear-gradient(135deg, #b91c1c 0%, #ef4444 100%); color: #fff; }
+  .stat-card.blue { background: linear-gradient(135deg, #0f172a 0%, var(--secondary-blue) 100%); color: #fff; }
+
+  .stat-icon-wrap {
+    width: 44px; height: 44px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 14px;
+  }
+  .stat-icon-img { width: 24px; height: 24px; }
+
+  .stat-label {
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.07em;
+    opacity: 0.75; margin-bottom: 5px;
+  }
+  .stat-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 38px; font-weight: 800;
+    line-height: 1;
+  }
+  .stat-sub { font-size: 12px; opacity: 0.65; margin-top: 6px; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .card-header-custom {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .card-title-custom {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px; font-weight: 700;
+    color: var(--text); margin: 0;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .badge-green, .badge-jsk-green { background: rgba(16, 185, 129, 0.1); color: var(--jsk-green); font-weight: 600; border-radius: 20px; padding: 4px 10px; }
+  .badge-gold, .badge-jsk-yellow { background: rgba(245,158,11,0.15); color: var(--gold-dark); font-weight: 600; border-radius: 20px; padding: 4px 10px; }
+  .badge-red, .badge-jsk-red { background: rgba(239,68,68,0.1); color: #b91c1c; font-weight: 600; border-radius: 20px; padding: 4px 10px; }
+  .badge-blue, .badge-jsk-blue { background: rgba(59,130,246,0.1); color: #1e40af; font-weight: 600; border-radius: 20px; padding: 4px 10px; }
+  .badge-gray, .badge-jsk-gray { background: #f1f5f9; color: #475569; font-weight: 500; border-radius: 20px; padding: 4px 10px; }
+  .badge-orange, .badge-jsk-orange { background: rgba(249,115,22,0.1); color: #c2410c; font-weight: 600; border-radius: 20px; padding: 4px 10px; }
+
+  .btn-jsk {
+    background: var(--primary-blue); color: #fff;
+    border: none; font-weight: 600;
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    transition: all .18s;
+  }
+  .btn-jsk:hover {
+    background: var(--secondary-blue); color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(37,99,235,0.3);
+  }
+  .btn-outline-jsk {
+    border: 1.5px solid var(--primary-blue); color: var(--primary-blue);
+    background: transparent;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    transition: all .15s;
+  }
+  .btn-outline-jsk:hover { background: var(--primary-blue); color: #fff; }
+
+  .table-custom thead th {
+    font-size: 11px; font-weight: 700; color: var(--text-3);
+    text-transform: uppercase; letter-spacing: 0.07em;
+    border-bottom: 2px solid var(--bg);
+    padding: 10px 16px; background: var(--bg);
+  }
+  .table-custom tbody td {
+    padding: 13px 16px; font-size: 13.5px;
+    border-bottom: 1px solid var(--bg);
+    vertical-align: middle;
+  }
+
+  .form-control, .form-select {
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px; padding: 9px 13px;
+    color: var(--text);
+    background: var(--surface);
+  }
+  .form-control:focus, .form-select:focus {
+    border-color: var(--secondary-blue);
+    box-shadow: 0 0 0 3px var(--blue-glass);
+    outline: none;
+  }
+
+  .avatar {
+    border-radius: 50%;
+    background: var(--primary-blue);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; color: var(--gold);
+    flex-shrink: 0;
+  }
+  .avatar-sm { width: 34px; height: 34px; font-size: 11px; }
+  .avatar-lg { width: 58px; height: 58px; font-size: 20px; }
+  .avatar-yellow { background: var(--gold); color: var(--primary-blue); }
+
+  #toast-container { position: fixed; bottom: 26px; right: 26px; z-index: 9999; }
+  .toast-msg {
+    background: var(--primary-blue); color: #fff;
+    padding: 13px 22px; border-radius: 12px;
+    font-size: 13px; font-weight: 600;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+    margin-top: 8px;
+    animation: slideUp .25s cubic-bezier(.4,0,.2,1);
+  }
+
+  .progress-thin { height: 5px; border-radius: 3px; background: var(--bg); overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 3px; background: var(--jsk-green); }
+
+  @media (max-width: 991px) {
+    .sidebar { width: 64px; }
+    .nav-link-custom span:not(.nav-icon-wrap), .nav-badge,
+    .nav-section-label, .user-name, .user-role, .brand-club-name, .brand-club-sub { display: none; }
+    .sidebar-brand { justify-content: center; padding: 14px 8px; }
+    .sidebar-logo-club-wrap { width: 36px; height: 36px; }
+    .sidebar-logo-club { width: 30px; height: 30px; }
+    .nav-link-custom { justify-content: center; padding: 11px; }
+    .main-content { margin-left: 64px; }
+    .sidebar-athlete-profile { display: none; }
+  }
+
+  .nav-icon-wrap,
+  .nav-icon-img {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 22px !important;
+    height: 22px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .nav-icon-wrap svg,
+  .nav-icon-img svg {
+    width: 18px !important;
+    height: 18px !important;
+    max-width: 18px !important;
+    max-height: 18px !important;
+    display: block !important;
+    flex-shrink: 0 !important;
+    fill: currentColor;
+  }
+
+  .nav-link-custom {
+    display: flex !important;
+    align-items: center !important;
+    gap: 11px !important;
+    text-decoration: none !important;
+    width: 100% !important;
+  }
+
+  .stat-icon-img {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 24px !important;
+    height: 24px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .stat-icon-img svg {
+    width: 24px !important;
+    height: 24px !important;
+    max-width: 24px !important;
+    max-height: 24px !important;
+    display: block !important;
+    fill: currentColor;
+  }
+
+  .card-title-icon {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 16px !important;
+    height: 16px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .card-title-icon svg {
+    width: 16px !important;
+    height: 16px !important;
+    max-width: 16px !important;
+    max-height: 16px !important;
+    display: block !important;
+    fill: currentColor;
+  }
+
+  .ico, .ico-white, .ico-green {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 16px !important;
+    height: 16px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .ico svg, .ico-white svg, .ico-green svg {
+    width: 16px !important;
+    height: 16px !important;
+    max-width: 16px !important;
+    max-height: 16px !important;
+    display: block !important;
+    fill: currentColor;
+  }
+
+  span[style*="width:10px"] svg,
+  span[style*="width:14px"] svg,
+  span[style*="width:32px"] svg {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    display: block !important;
+    fill: currentColor;
+  }
+
+  .bi, [class^="bi-"], [class*=" bi-"] {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    vertical-align: middle !important;
+    line-height: 1 !important;
+  }
+
+  .avatar {
+    flex-shrink: 0 !important;
+  }
+</style>
+{% block extra_css %}{% endblock %}
+</head>
+<body>
+
+{% if role or user.is_authenticated %}
+<div class="app-layout">
+
+  <aside class="sidebar">
+    <a class="sidebar-brand" href="#">
+      <div class="sidebar-logo-club-wrap">
+        <img src="{% static 'img/logo-ligue.png' %}" alt="LATO" class="sidebar-logo-club">
+      </div>
+      <div>
+        <span class="brand-club-name">LATO</span>
+        <span class="brand-club-sub d-block">
+          {% if role == "club_admin" %}
+            Espace Club
+          {% elif role == "coach" %}
+            Espace Entraîneur
+          {% elif role == "ligue" %}
+            Espace Ligue
+          {% elif role == "athlete" %}
+            Espace Athlète
+          {% else %}
+            Espace Athlète
+          {% endif %}
+        </span>
+      </div>
+    </a>
+
+    {% if role == "athlete" and athlete %}
+    <div class="sidebar-athlete-profile">
+      <div class="profile-avatar">{{ athlete.initiales|default:"LA" }}</div>
+      <div class="profile-name">{{ athlete.nom_complet }}</div>
+      <div class="profile-meta">{{ athlete.club.nom }}</div>
+      <a href="{% url 'athlete_profil' %}" class="btn-profile">Mon Profil</a>
+    </div>
+    {% endif %}
+
+    <nav class="sidebar-nav">
+      {% block sidebar_nav %}{% endblock %}
+      {% if role == 'ligue' or role == 'club_admin' %}
+      {% url 'comptes' as comptes_url %}
+      <span class="nav-section-label">Sécurité</span>
+      <div class="nav-item"><a class="nav-link-custom{% if request.path == comptes_url %} active{% endif %}" href="{{ comptes_url }}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;"><i class="bi bi-key-fill"></i></span></div><span>Comptes &amp; mots de passe</span></a></div>
+      {% endif %}
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">
+        {% if user.nom %}
+          {{ user.nom|slice:":2"|upper }}
+        {% elif user.email %}
+          {{ user.email|slice:":2"|upper }}
+        {% else %}
+          {{ user|slice:":2"|upper }}
+        {% endif %}
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div class="user-name">
+          {% if user.get_full_name %}
+            {{ user.get_full_name }}
+          {% elif user.nom %}
+            {{ user.prenom }} {{ user.nom }}
+          {% elif user.email %}
+            {{ user.email }}
+          {% else %}
+            {{ user }}
+          {% endif %}
+        </div>
+        <div class="user-role">{{ role|upper }}</div>
+      </div>
+      <a href="{% url 'changer_mdp' %}" class="btn-logout" style="margin-left:auto;" title="Changer mon mot de passe">
+        <i class="bi bi-key text-white fs-5"></i>
+      </a>
+      <a href="{% url 'logout' %}" class="btn-logout" style="margin-left:4px;" title="Déconnexion">
+        <i class="bi bi-box-arrow-right text-white fs-5"></i>
+      </a>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div class="d-flex gap-1 align-items-center">
+  {% for s in saisons %}
+  <a href="{% url 'changer_saison' %}?saison={{ s }}&next={{ request.path }}"
+     class="btn btn-sm {% if s == saison_active %}btn-jsk{% else %}btn-outline-jsk{% endif %}">
+    {{ s }}
+  </a>
+  {% endfor %}
+</div>
+      
+
+      <div class="topbar-logos-right">
+        <div class="topbar-logo-box" title="Ligue d'Athlétisme de Tizi Ouzou">
+          <img src="{% static 'img/logo-ligue.png' %}" alt="LATO" class="topbar-logo-img">
+        </div>
+        <div class="topbar-logo-box" title="Fédération Algérienne d'Athlétisme">
+          <img src="{% static 'img/logo-federation.png' %}" alt="FAA" class="topbar-logo-img fed">
+        </div>
+      </div>
+    </header>
+
+    {% if messages %}
+    <div class="px-4 pt-3">
+      {% for msg in messages %}
+      <div class="alert alert-{{ msg.tags|default:'info' }} alert-dismissible fade show rounded-3 py-2 px-3" style="font-size:13px;" role="alert">
+        {{ msg }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <main class="page-body">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% else %}
+  {% block auth_content %}{% endblock %}
+{% endif %}
+
+<div id="toast-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function toast(msg, type='') {
+  const el = document.createElement('div');
+  el.className = 'toast-msg' + (type ? ' ' + type : '');
+  el.textContent = msg;
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

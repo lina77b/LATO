@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Comptes{% endblock %}
+{% block page_title %}Comptes &amp; mots de passe{% endblock %}
+{% block sidebar_nav %}<span class="nav-section-label">Navigation</span>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_dashboard" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.house|safe }}</span></div><span>Dashboard</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_clubs" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.buildings|safe }}</span></div><span>Clubs</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_athletes" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span></div><span>Athletes</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_coaches" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.chalkboard_teacher|safe }}</span></div><span>Coaches</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_licences" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.identification_card|safe }}</span></div><span>Licences</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_records" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.trophy|safe }}</span></div><span>Records Wilaya</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_calendrier" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.calendar|safe }}</span></div><span>Calendrier</span></a></div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url 'ligue_bilan' %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.medal|safe }}</span></div>
+    <span>Bilan Saisonnier</span>
+  </a>
+</div>
+<span class="nav-section-label">Systeme</span>
+<div class="nav-item"><a class="nav-link-custom" href="/admin/"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.gear|safe }}</span></div><span>Administration</span></a></div>
+{% endblock %}
+{% block content %}{% include "shared/_comptes_contenu.html" %}{% endblock %}

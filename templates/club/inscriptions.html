@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}Inscriptions{% endblock %}
+{% block page_title %}Dossiers d'inscription{% endblock %}
+
+{% block sidebar_nav %}
+<span class="nav-section-label">Mon Club</span>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_dashboard" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.house|safe }}</span></div><span>Dashboard</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_athletes" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span></div><span>Athletes</span></a></div>
+<div class="nav-item"><a class="nav-link-custom active" href="{% url "club_inscriptions" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.identification_card|safe }}</span></div><span>Inscriptions</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_coaches" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.chalkboard_teacher|safe }}</span></div><span>Coaches</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_groupes" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span></div><span>Groupes</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_performances" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.chart_line_up|safe }}</span></div><span>Performances</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_seances" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.timer|safe }}</span></div><span>Seances</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_calendrier" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.calendar|safe }}</span></div><span>Calendrier</span></a></div>
+{% endblock %}
+
+{% block content %}
+<div class="section-header">
+  <div>
+    <div class="section-title">Inscriptions</div>
+    <div class="section-sub">Validez les dossiers avant envoi a la Ligue</div>
+  </div>
+</div>
+
+
+{% if incomplets %}
+<div class="card p-4 mb-3">
+  <h6 class="card-title-custom mb-3">
+    <i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>
+    Etape 1 — Dossiers incomplets ({{ incomplets|length }})
+  </h6>
+  <div class="text-muted mb-3" style="font-size:12px;">
+    <i class="bi bi-info-circle me-1"></i>
+    Cochez "Certificat fourni" une fois le document recu pour debloquer l'envoi a la Ligue.
+  </div>
+  {% for a in incomplets %}
+  <div class="d-flex align-items-center gap-3 py-3 border-bottom">
+    <div class="avatar avatar-sm">{{ a.initiales }}</div>
+    <div class="flex-grow-1">
+      <div style="font-weight:600;">{{ a.nom_complet }}</div>
+      <div style="font-size:12px;color:#e74c3c;">
+        <i class="bi bi-x-circle me-1"></i>Certificat medical manquant
+      </div>
+      <div style="font-size:11px;color:#adb5bd;">{{ a.categorie }} — {{ a.epreuves|join:", " }}</div>
+    </div>
+    <form method="post" action="{% url 'gerer_certificat' a.pk %}" enctype="multipart/form-data" class="d-flex align-items-center gap-2">
+  {% csrf_token %}
+  {% if a.cert_medical_img %}
+    <span class="badge badge-jsk-green"><i class="bi bi-check-circle me-1"></i>Certificat uploadé</span>
+  {% else %}
+    <input type="file" name="cert_medical_img" accept="image/*" class="form-control form-control-sm" style="max-width:200px;">
+    <button type="submit" class="btn btn-sm btn-primary"><i class="bi bi-upload me-1"></i>Uploader</button>
+  {% endif %}
+</form>
+    <a href="{% url 'athlete_modifier' a.pk %}" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-pencil me-1"></i>Modifier
+    </a>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+
+<div class="card p-4 mb-3">
+  <h6 class="card-title-custom mb-3">
+    <i class="bi bi-card-checklist me-2" style="color:var(--jsk-green)"></i>
+    Etape 2 — Prets a envoyer a la Ligue ({{ non_lic|length }})
+  </h6>
+  {% for a in non_lic %}
+  <div class="d-flex align-items-center gap-3 py-3 border-bottom">
+    <div class="avatar avatar-lg">{{ a.initiales }}</div>
+    <div class="flex-grow-1">
+      <div style="font-size:15px;font-weight:700;">{{ a.nom_complet }}</div>
+      <div class="d-flex flex-wrap gap-2 mt-1">
+        <span class="badge badge-jsk-gray">{{ a.categorie }}</span>
+        {% if a.cert_medical %}
+          <span class="badge badge-jsk-green"><i class="bi bi-check-circle me-1"></i>Cert. medical OK</span>
+        {% else %}
+          <span class="badge badge-jsk-red"><i class="bi bi-x-circle me-1"></i>Cert. manquant</span>
+        {% endif %}
+      </div>
+      <div style="font-size:11px;color:#adb5bd;">{{ a.epreuves|join:", " }}</div>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+      <a href="{% url 'athlete_modifier' a.pk %}" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-pencil me-1"></i>Modifier
+      </a>
+      {% if a.cert_medical %}
+  <form method="post" action="{% url 'prevalider_licence' a.pk %}" class="d-inline" onsubmit="return confirm('Envoyer le dossier de {{ a.nom_complet }} a la Ligue ?')">{% csrf_token %}<button type="submit" class="btn btn-jsk btn-sm">
+    <i class="bi bi-send me-1"></i>Envoyer a la Ligue
+  </button></form>
+{% else %}
+  <form method="post" action="{% url 'gerer_certificat' a.pk %}" enctype="multipart/form-data" class="d-flex align-items-center gap-2">
+    {% csrf_token %}
+    <input type="file" name="cert_medical_img" accept="image/*" class="form-control form-control-sm" style="max-width:200px;">
+    <button type="submit" class="btn btn-sm btn-outline-primary"><i class="bi bi-upload me-1"></i>Uploader</button>
+  </form>
+{% endif %}
+    </div>
+  </div>
+  {% empty %}
+  <div class="text-center py-3 text-muted" style="font-size:13px;">
+    <i class="bi bi-inbox me-2"></i>Aucun dossier pret — completez d'abord les dossiers incomplets ci-dessus.
+  </div>
+  {% endfor %}
+</div>
+
+
+{% if en_attente %}
+<div class="card p-4 mb-3">
+  <h6 class="card-title-custom mb-3">
+    <i class="bi bi-hourglass-split me-2 text-warning"></i>
+    Etape 3 — Transmis a la Ligue ({{ en_attente|length }})
+  </h6>
+  <div class="text-muted mb-2" style="font-size:12px;">
+    <i class="bi bi-info-circle me-1"></i>En attente de validation par la Ligue d'Athletisme de Tizi Ouzou.
+  </div>
+  {% for a in en_attente %}
+  <div class="d-flex align-items-center gap-3 py-2 border-bottom">
+    <div class="avatar avatar-sm">{{ a.initiales }}</div>
+    <div class="flex-grow-1">
+      <div style="font-size:13px;font-weight:600;">{{ a.nom_complet }}</div>
+      <div style="font-size:11px;color:#adb5bd;">{{ a.categorie }} — {{ a.epreuves|join:", " }}</div>
+    </div>
+    <span class="badge badge-jsk-yellow">
+      <i class="bi bi-hourglass me-1"></i>En attente Ligue
+    </span>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}
+

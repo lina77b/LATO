@@ -1,0 +1,32 @@
+
+{% extends "base.html" %}
+{% block title %}{{ titre }}{% endblock %}
+{% block page_title %}{{ titre }}{% endblock %}
+{% block sidebar_nav %}
+{% if role == 'coach' %}
+<div class="nav-item"><a class="nav-link-custom" href="{% url 'coach_dashboard' %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.house|safe }}</span></div><span>Dashboard</span></a></div>
+<div class="nav-item"><a class="nav-link-custom active" href="{% url 'coach_seances' %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.timer|safe }}</span></div><span>Seances</span></a></div>
+{% else %}
+<div class="nav-item"><a class="nav-link-custom" href="{% url 'club_dashboard' %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.house|safe }}</span></div><span>Dashboard</span></a></div>
+<div class="nav-item"><a class="nav-link-custom active" href="{% url 'club_seances' %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.timer|safe }}</span></div><span>Seances</span></a></div>
+{% endif %}
+{% endblock %}
+{% block content %}
+<div class="section-header">
+  <div class="section-title">{{ titre }}</div>
+  <a href="javascript:history.back()" class="btn btn-outline-jsk"><i class="bi bi-arrow-left me-1"></i>Retour</a>
+</div>
+<div class="row"><div class="col-lg-6">
+  <div class="card p-4">
+    <form method="post">{% csrf_token %}
+      {% for f in form %}
+      <div class="mb-3"><label class="form-label">{{ f.label }}</label>{{ f }}{% if f.errors %}<div class="text-danger" style="font-size:12px">{{ f.errors.0 }}</div>{% endif %}</div>
+      {% endfor %}
+      <div class="d-flex gap-2 mt-2">
+        <a href="javascript:history.back()" class="btn btn-secondary">Annuler</a>
+        <button type="submit" class="btn btn-jsk"><i class="bi bi-calendar-check me-1"></i>Planifier</button>
+      </div>
+    </form>
+  </div>
+</div></div>
+{% endblock %}

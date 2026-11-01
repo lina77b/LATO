@@ -1,0 +1,125 @@
+
+{% extends "base.html" %}
+{% block title %}Records Wilaya{% endblock %}
+{% block page_title %}Records de la Wilaya{% endblock %}
+{% block sidebar_nav %}<span class="nav-section-label">Navigation</span>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_dashboard" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.house|safe }}</span></div><span>Dashboard</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_clubs" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.buildings|safe }}</span></div><span>Clubs</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_athletes" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span></div><span>Athletes</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url 'ligue_coaches' %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.chalkboard_teacher|safe }}</span></div><span>Coaches</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_licences" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.identification_card|safe }}</span></div><span>Licences</span></a></div>
+<div class="nav-item"><a class="nav-link-custom active" href="{% url "ligue_records" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.trophy|safe }}</span></div><span>Records Wilaya</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_calendrier" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.calendar|safe }}</span></div><span>Calendrier</span></a></div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url 'ligue_bilan' %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.medal|safe }}</span></div>
+    <span>Bilan Saisonnier</span>
+  </a>
+</div>
+<span class="nav-section-label">Systeme</span>
+<div class="nav-item"><a class="nav-link-custom" href="/admin/"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.gear|safe }}</span></div><span>Administration</span></a></div>
+{% endblock %}
+{% block content %}
+<div class="section-header">
+  <div><div class="section-title">Records de la Wilaya de Tizi Ouzou</div></div>
+  <button class="btn btn-jsk" data-bs-toggle="modal" data-bs-target="#modalRecord">
+    <i class="bi bi-plus me-1"></i>Ajouter un record
+  </button>
+</div>
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card p-4">
+      <h6 class="card-title-custom mb-3"><i class="bi bi-person me-2" style="color:var(--jsk-green)"></i>Hommes</h6>
+      <div class="table-responsive"><table class="table table-custom mb-0">
+        <thead><tr><th>Epreuve</th><th>Performance</th><th>Athlete</th><th>Club</th><th>Date</th></tr></thead>
+        <tbody>
+        {% for r in records_h %}
+        <tr>
+          <td><strong>{{ r.epreuve }}</strong></td>
+          <td><span style="font-size:16px;font-weight:800;color:var(--jsk-green)">{{ r.performance }}</span></td>
+          <td><div class="d-flex align-items-center gap-2"><div class="avatar avatar-sm">{{ r.athlete_nom|slice:":2"|upper }}</div>{{ r.athlete_nom }}</div></td>
+          <td style="font-size:12px;color:#6c757d">{{ r.club_nom }}</td>
+          <td style="font-size:12px;color:#6c757d">{{ r.date|date:"d/m/Y" }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card p-4">
+      <h6 class="card-title-custom mb-3"><i class="bi bi-person me-2" style="color:var(--jsk-yellow-dark)"></i>Femmes</h6>
+      <div class="table-responsive"><table class="table table-custom mb-0">
+        <thead><tr><th>Epreuve</th><th>Performance</th><th>Athlete</th><th>Club</th><th>Date</th></tr></thead>
+        <tbody>
+        {% for r in records_f %}
+        <tr>
+          <td><strong>{{ r.epreuve }}</strong></td>
+          <td><span style="font-size:16px;font-weight:800;color:var(--jsk-green)">{{ r.performance }}</span></td>
+          <td><div class="d-flex align-items-center gap-2"><div class="avatar avatar-sm avatar-yellow">{{ r.athlete_nom|slice:":2"|upper }}</div>{{ r.athlete_nom }}</div></td>
+          <td style="font-size:12px;color:#6c757d">{{ r.club_nom }}</td>
+          <td style="font-size:12px;color:#6c757d">{{ r.date|date:"d/m/Y" }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="modalRecord" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Ajouter / Modifier un record</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form method="post" action="{% url 'ligue_records' %}">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-8">
+              <label class="form-label" style="font-size:12px;font-weight:600;">Épreuve</label>
+              <input type="text" name="epreuve" class="form-control form-control-sm" required placeholder="ex: 100m, Longueur...">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" style="font-size:12px;font-weight:600;">Sexe</label>
+              <select name="sexe" class="form-select form-select-sm">
+                <option value="M">Masculin</option>
+                <option value="F">Féminin</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" style="font-size:12px;font-weight:600;">Performance</label>
+              <input type="text" name="performance" class="form-control form-control-sm" required placeholder="ex: 10.85, 7m23...">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" style="font-size:12px;font-weight:600;">Valeur numérique</label>
+              <input type="number" step="0.01" name="valeur_num" class="form-control form-control-sm" required placeholder="ex: 10.85">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" style="font-size:12px;font-weight:600;">Nom de l'athlète</label>
+              <input type="text" name="athlete_nom" class="form-control form-control-sm" required placeholder="Nom complet">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" style="font-size:12px;font-weight:600;">Club</label>
+              <input type="text" name="club_nom" class="form-control form-control-sm" placeholder="Nom du club">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" style="font-size:12px;font-weight:600;">Date</label>
+              <input type="date" name="date" class="form-control form-control-sm">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" style="font-size:12px;font-weight:600;">Lieu</label>
+              <input type="text" name="lieu" class="form-control form-control-sm" placeholder="ex: Alger">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-jsk" data-bs-dismiss="modal">Annuler</button>
+          <button type="submit" class="btn btn-jsk">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

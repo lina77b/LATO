@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Dashboard Club{% endblock %}
+{% block page_title %}Tableau de bord{% endblock %}
+{% block sidebar_nav %}
+<span class="nav-section-label">Mon Club</span>
+<div class="nav-item"><a class="nav-link-custom active" href="{% url "club_dashboard" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.house|safe }}</span></div><span>Dashboard</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_athletes" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span></div><span> Athletes</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_inscriptions" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.identification_card|safe }}</span></div><span>Inscriptions</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_coaches" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.chalkboard_teacher|safe }}</span></div><span>Coaches</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_groupes" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span></div><span>Groupes</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_performances" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.chart_line_up|safe }}</span></div><span>Performances</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_seances" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.timer|safe }}</span></div><span>Seances</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_calendrier" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.calendar|safe }}</span></div><span>Calendrier</span></a></div>
+{% endblock %}
+{% block content %}
+<div class="section-header">
+  <div><div class="section-title">{{ club.nom|default:"Mon Club" }}</div><div class="section-sub">Saison 2025-2026</div></div>
+  <a href="{% url 'athlete_creer' %}" class="btn btn-jsk"><i class="bi bi-plus-lg me-1"></i>Ajouter un athlete</a>
+</div>
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3"><div class="stat-card green">
+    <div class="stat-icon-wrap"><span class="stat-icon-img" style="filter:brightness(0) invert(1); display:inline-flex; align-items:center;">{{ ICONS.users_three|safe }}</span></div>
+    <div class="stat-label">Athletes</div>
+    <div class="stat-value">{{ nb_athletes }}</div>
+    <div class="stat-sub">{{ nb_licencies }} licencies</div>
+  </div></div>
+  <div class="col-6 col-lg-3"><div class="stat-card yellow">
+    <div class="stat-icon"><i class="bi bi-person-badge-fill"></i></div>
+    <div class="stat-label">Coaches</div>
+    <div class="stat-value">{{ nb_coaches }}</div>
+    <div class="stat-sub">Encadrants</div>
+  </div></div>
+  <div class="col-6 col-lg-3"><div class="stat-card red">
+    <div class="stat-icon-wrap"><span class="stat-icon-img" style="filter:brightness(0) invert(1); display:inline-flex; align-items:center;">{{ ICONS.identification_card|safe }}</span></div>
+    <div class="stat-label">A inscrire</div>
+    <div class="stat-value">{{ nb_attente }}</div>
+    <div class="stat-sub">Dossiers en attente</div>
+  </div></div>
+  <div class="col-6 col-lg-3"><div class="stat-card blue">
+    <div class="stat-icon"><i class="bi bi-diagram-3-fill"></i></div>
+    <div class="stat-label">Groupes</div>
+    <div class="stat-value">{{ groupes|length }}</div>
+    <div class="stat-sub">D'entrainement</div>
+  </div></div>
+</div>
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card p-4 h-100">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="card-title-custom"><i class="bi bi-diagram-3 me-2" style="color:var(--jsk-green)"></i>Groupes</h6>
+        <a href="{% url 'club_groupes' %}" class="btn btn-outline-jsk btn-sm">Gerer</a>
+      </div>
+      {% for g in groupes %}<div class="d-flex align-items-center gap-3 py-2 border-bottom">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--jsk-green);flex-shrink:0"></div>
+        <div class="flex-grow-1" style="font-size:13px;font-weight:500">{{ g.groupe|default:"Sans groupe" }}</div>
+        <span class="badge badge-jsk-gray">{{ g.nb }}</span>
+      </div>{% empty %}<div class="text-center text-muted py-3" style="font-size:13px">Aucun groupe{% endfor %}
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card p-4 h-100">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="card-title-custom"><i class="bi bi-graph-up me-2" style="color:var(--jsk-green)"></i>Dernieres performances</h6>
+        <a href="{% url 'club_performances' %}" class="btn btn-outline-jsk btn-sm">Voir toutes</a>
+      </div>
+      {% for p in perfs_recentes %}<div class="d-flex align-items-center gap-3 py-2 border-bottom">
+        <div class="avatar avatar-sm">{{ p.athlete.initiales }}</div>
+        <div class="flex-grow-1"><div style="font-size:13px;font-weight:500">{{ p.athlete.nom_complet }}</div><div style="font-size:11px;color:#adb5bd">{{ p.epreuve }} &middot; {{ p.date|date:"d/m/Y" }}</div></div>
+        <strong style="color:var(--jsk-green);font-size:14px">{{ p.performance }}</strong>
+        {% if p.record_wilaya %}<span class="badge badge-jsk-yellow">RW</span>{% endif %}
+      </div>{% empty %}<div class="text-center text-muted py-3" style="font-size:13px">Aucune performance</div>{% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}Calendrier{% endblock %}
+{% block page_title %}Calendrier des Competitions{% endblock %}
+{% block sidebar_nav %}<span class="nav-section-label">Navigation</span>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_dashboard" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.house|safe }}</span></div><span>Dashboard</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_clubs" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.buildings|safe }}</span></div><span>Clubs</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_athletes" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span></div><span>Athletes</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url 'ligue_coaches' %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.chalkboard_teacher|safe }}</span></div><span>Coaches</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_licences" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.identification_card|safe }}</span></div><span>Licences</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_records" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.trophy|safe }}</span></div><span>Records Wilaya</span></a></div>
+<div class="nav-item"><a class="nav-link-custom active" href="{% url "ligue_calendrier" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.calendar|safe }}</span></div><span>Calendrier</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url 'ligue_bilan' %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.medal|safe }}</span></div><span>Bilan Saisonnier</span></a></div>
+<span class="nav-section-label">Systeme</span>
+<div class="nav-item"><a class="nav-link-custom" href="/admin/"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.gear|safe }}</span></div><span>Administration</span></a></div>
+{% endblock %}
+
+{% block content %}
+<div class="section-header">
+  <div class="section-title">Calendrier</div>
+  <button class="btn btn-jsk" data-bs-toggle="modal" data-bs-target="#modalEvent">
+    <i class="bi bi-plus-lg me-1"></i>Ajouter
+  </button>
+</div>
+
+<div class="row g-3">
+{% for e in evenements %}
+<div class="col-md-6 col-lg-4">
+  <div class="card p-4" style="border-left: 4px solid {% if e.type_event == 'competition' %}var(--jsk-green){% elif e.type_event == 'meeting' %}#2980b9{% elif e.type_event == 'cross' %}#e67e22{% else %}#e74c3c{% endif %}">
+    <div class="d-flex justify-content-between align-items-start mb-2">
+      {% if e.type_event == 'competition' %}<span class="badge badge-jsk-green">Competition</span>
+      {% elif e.type_event == 'meeting' %}<span class="badge badge-jsk-blue">Meeting</span>
+      {% elif e.type_event == 'cross' %}<span class="badge badge-jsk-orange">Cross</span>
+      {% else %}<span class="badge badge-jsk-red">National</span>{% endif %}
+      <small class="text-muted">{{ e.date|date:"d/m/Y" }}</small>
+    </div>
+
+    <h6 style="font-weight:700;margin-bottom:6px">{{ e.titre }}</h6>
+    <div style="font-size:12px;color:#6c757d"><i class="bi bi-geo-alt me-1"></i>{{ e.lieu }}</div>
+    <div style="font-size:12px;color:#6c757d"><i class="bi bi-person-running me-1"></i>{{ e.epreuves }}</div>
+
+    {% if e.description %}
+    <div style="font-size:12px;color:#6c757d;margin-top:6px;background:#f8f9fa;border-radius:8px;padding:8px;">
+      <i class="bi bi-list-ul me-1"></i>{{ e.description }}
+    </div>
+    {% endif %}
+
+    {% if e.programme %}
+    <div class="mt-2">
+      <a href="{{ e.programme.url }}" target="_blank" class="btn btn-outline-jsk btn-sm w-100">
+        <i class="bi bi-file-earmark-pdf me-1"></i>Voir le programme
+      </a>
+    </div>
+    {% endif %}
+
+    <div class="d-flex gap-2 mt-3">
+      <a href="{% url 'evenement_modifier' e.pk %}" class="btn btn-outline-jsk btn-sm flex-grow-1">
+        <i class="bi bi-pencil me-1"></i>Modifier
+      </a>
+      <button class="btn btn-outline-secondary btn-sm" title="Uploader programme"
+        data-bs-toggle="modal" data-bs-target="#modalUpload{{ e.pk }}">
+        <i class="bi bi-upload"></i>
+      </button>
+      <form method="post" action="{% url 'evenement_supprimer' e.pk %}" class="d-inline" onsubmit="return confirm('Supprimer ?')">{% csrf_token %}<button type="submit" class="btn btn-outline-danger btn-sm">
+        <i class="bi bi-trash"></i>
+      </button></form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalUpload{{ e.pk }}" tabindex="-1">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title"><i class="bi bi-upload me-2"></i>Programme — {{ e.titre }}</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form method="post" action="{% url 'evenement_upload_programme' e.pk %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-body">
+          <label class="form-label" style="font-size:13px;font-weight:600;">Fichier PDF / Image</label>
+          <input type="file" name="programme" class="form-control" accept=".pdf,.jpg,.jpeg,.png" required>
+          <div style="font-size:11px;color:#6c757d;margin-top:6px;">Formats acceptés : PDF, JPG, PNG</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Annuler</button>
+          <button type="submit" class="btn btn-jsk btn-sm"><i class="bi bi-upload me-1"></i>Uploader</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% empty %}
+<div class="col-12 text-center py-5 text-muted">Aucune competition planifiee</div>
+{% endfor %}
+</div>
+
+<div class="modal fade" id="modalEvent" tabindex="-1">
+  <div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Ajouter une competition</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+    <form method="post">
+    {% csrf_token %}
+    <div class="modal-body">
+      {% for f in form %}
+      <div class="mb-3">
+        <label class="form-label">{{ f.label }}</label>{{ f }}
+        {% if f.errors %}<div class="text-danger" style="font-size:12px">{{ f.errors.0 }}</div>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+      <button type="submit" class="btn btn-jsk">Ajouter</button>
+    </div>
+    </form>
+  </div></div>
+</div>
+
+{% if form.errors %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => new bootstrap.Modal(document.getElementById('modalEvent')).show())
+</script>
+{% endif %}
+{% endblock %}

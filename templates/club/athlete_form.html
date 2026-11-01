@@ -1,0 +1,56 @@
+
+{% extends "base.html" %}
+{% block title %}{{ titre }}{% endblock %}
+{% block page_title %}{{ titre }}{% endblock %}
+{% block sidebar_nav %}<span class="nav-section-label">Mon Club</span>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_dashboard" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.house|safe }}</span></div><span>Dashboard</span></a></div>
+<div class="nav-item"><a class="nav-link-custom active" href="{% url "club_athletes" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span></div><span>Athletes</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_inscriptions" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.identification_card|safe }}</span></div><span>Inscriptions</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_coaches" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.chalkboard_teacher|safe }}</span></div><span>Coaches</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_groupes" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span></div><span>Groupes</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_performances" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.chart_line_up|safe }}</span></div><span>Performances</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_seances" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.timer|safe }}</span></div><span>Seances</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_calendrier" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.calendar|safe }}</span></div><span>Calendrier</span></a></div>
+{% endblock %}
+{% block content %}
+<div class="section-header">
+  <div class="section-title">{{ titre }}</div>
+  <a href="{% url 'club_athletes' %}" class="btn btn-outline-jsk"><i class="bi bi-arrow-left me-1"></i>Retour</a>
+</div>
+<div class="row"><div class="col-lg-8">
+  <div class="card p-4">
+    <form method="post" <form method="post" enctype="multipart/form-data">>
+      {% csrf_token %}
+      <div class="row g-3 mb-3">
+        <div class="col-md-6"><label class="form-label">Prenom *</label>{{ form.prenom }}{% if form.prenom.errors %}<div class="text-danger" style="font-size:12px">{{ form.prenom.errors.0 }}</div>{% endif %}</div>
+        <div class="col-md-6"><label class="form-label">Nom *</label>{{ form.nom }}{% if form.nom.errors %}<div class="text-danger" style="font-size:12px">{{ form.nom.errors.0 }}</div>{% endif %}</div>
+        <div class="col-md-6"><label class="form-label">Date de naissance *</label>{{ form.date_naissance }}</div>
+        <div class="col-md-3"><label class="form-label">Sexe</label>{{ form.sexe }}</div>
+        <div class="col-md-3"><label class="form-label">Categorie</label>{{ form.categorie }}</div>
+        <div class="col-md-6"><label class="form-label">Groupe</label>{{ form.groupe }}</div>
+        <div class="col-md-6"><label class="form-label">Coach</label>{{ form.coach }}</div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Epreuves pratiquees</label>
+        <div class="p-3 border rounded-3" style="background:#f8f9fa">
+          <div class="row g-2">
+          {% for cb in form.epreuves_select %}
+          <div class="col-6 col-md-4 col-lg-3">
+            <div class="form-check">
+              {{ cb.tag }}
+              <label class="form-check-label" style="font-size:13px" for="{{ cb.id_for_label }}">{{ cb.choice_label }}</label>
+            </div>
+          </div>
+          {% endfor %}
+          </div>
+        </div>
+      </div>
+    
+      <div class="d-flex gap-2">
+        <a href="{% url 'club_athletes' %}" class="btn btn-secondary">Annuler</a>
+        <button type="submit" class="btn btn-jsk"><i class="bi bi-floppy me-1"></i>Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div></div>
+{% endblock %}

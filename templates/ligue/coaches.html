@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Coaches{% endblock %}
+{% block page_title %}Coaches des clubs{% endblock %}
+{% block sidebar_nav %}<span class="nav-section-label">Navigation</span>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_dashboard" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.house|safe }}</span></div><span>Dashboard</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_clubs" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.buildings|safe }}</span></div><span>Clubs</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_athletes" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span></div><span>Athletes</span></a></div>
+<div class="nav-item"><a class="nav-link-custom active" href="{% url "ligue_coaches" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.chalkboard_teacher|safe }}</span></div><span>Coaches</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_licences" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.identification_card|safe }}</span></div><span>Licences</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_records" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.trophy|safe }}</span></div><span>Records Wilaya</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_calendrier" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.calendar|safe }}</span></div><span>Calendrier</span></a></div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url 'ligue_bilan' %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.medal|safe }}</span></div>
+    <span>Bilan Saisonnier</span>
+  </a>
+</div>
+<span class="nav-section-label">Systeme</span>
+<div class="nav-item"><a class="nav-link-custom" href="/admin/"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.gear|safe }}</span></div><span>Administration</span></a></div>
+{% endblock %}
+{% block content %}
+<div class="section-header">
+  <div><div class="section-title">Coaches des clubs affiliés</div><div class="section-sub">{{ coaches|length }} coaches</div></div>
+</div>
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-custom mb-0">
+  <thead><tr><th>Coach</th><th>Club</th><th>Spécialité</th><th>Email</th><th>Statut</th><th></th></tr></thead>
+  <tbody>
+  {% for c in coaches %}
+  <tr>
+    <td><div class="d-flex align-items-center gap-2"><div class="avatar avatar-sm">{{ c.nom|slice:":2"|upper }}</div><div><div style="font-weight:600">{{ c.prenom }} {{ c.nom }}</div></div></div></td>
+    <td>{{ c.club.nom|default:"--" }}</td>
+    <td>{{ c.specialite|default:"Généraliste" }}</td>
+    <td style="font-size:12px;color:#6c757d">{{ c.email }}</td>
+    <td><span class="badge {% if c.actif %}badge-jsk-green{% else %}badge-jsk-red{% endif %}">{% if c.actif %}Actif{% else %}Inactif{% endif %}</span></td>
+    <td><form method="post" action="{% url 'ligue_coach_supprimer' c.pk %}" class="d-inline" onsubmit="return confirm('Supprimer ce coach ?')">{% csrf_token %}<button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button></form></td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="6" class="text-center py-4 text-muted">Aucun coach</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+  </div>
+</div>
+{% endblock %}

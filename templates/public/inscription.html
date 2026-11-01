@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>S'inscrire — LATO</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-dark: #0f172a;
+      --gold: #f59e0b;
+      --gold-light: #fef3c7;
+      --green: #16a34a;
+      --gray: #64748b;
+      --light: #f8fafc;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--light); color: #1e293b; margin: 0; }
+
+    .navbar { background: var(--primary-dark); padding: 12px 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 20px rgba(0,0,0,0.3); }
+    .navbar-brand { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; color: #fff !important; display: flex; align-items: center; gap: 10px; }
+    .nav-link { color: rgba(255,255,255,0.75) !important; font-weight: 500; font-size: 14px; transition: color 0.2s; }
+    .nav-link:hover { color: var(--gold) !important; }
+    .btn-espace { background: var(--gold); color: #000 !important; font-weight: 700; font-size: 13px; padding: 8px 20px; border-radius: 8px; border: none; transition: background 0.2s; }
+    .btn-espace:hover { background: #d97706; }
+    .page-header { background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%); color: #fff; padding: 50px 0; }
+    .page-header h1 { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; }
+    .step-card { border-radius: 16px; background: #fff; padding: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); height: 100%; }
+    .step-num { width: 48px; height: 48px; border-radius: 50%; background: var(--primary); color: #fff; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+    footer { background: #0f172a; color: rgba(255,255,255,0.6); padding: 40px 0; font-size: 13px; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'public_home' %}">
+      <img src="/static/img/logo-ligue.png" alt="LATO" style="height:36px;">
+      LATO
+    </a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#nav" style="filter:invert(1);">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav me-auto gap-1">
+         <li class="nav-item"><a class="nav-link" href="{% url 'public_home' %}">Accueil</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'public_home' %}#historique">Histoire</a></li>  
+        <li class="nav-item"><a class="nav-link" href="{% url 'public_disciplines' %}">Disciplines</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'public_clubs' %}">Clubs</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'public_inscription'%}">Inscriptions</a></li>
+      </ul>
+      <a href="{% url 'login' %}" class="btn btn-espace">
+        <i class="bi bi-box-arrow-in-right me-1"></i>Espace membres
+      </a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1><i class="bi bi-person-plus me-3"></i>Comment s'inscrire ?</h1>
+    <p style="opacity:0.8;margin-top:8px;">Rejoignez l'athlétisme en quelques étapes simples</p>
+  </div>
+</div>
+
+<section style="padding:60px 0;">
+  <div class="container">
+
+    
+    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:28px;color:var(--primary);margin-bottom:8px;">Guide d'inscription</div>
+    <div style="color:#64748b;font-size:14px;margin-bottom:32px;">Suivez ces étapes pour rejoindre un club affilié à la LATO</div>
+    <div class="row g-4 mb-5">
+
+ 
+  <div class="col-md-6 col-lg-4">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:8px;">Choisir un club</div>
+      <p style="font-size:13px;color:#64748b;">
+        Consultez l'annuaire des clubs affiliés et choisissez celui qui correspond à votre localité.
+      </p>
+      <a href="{% url 'public_clubs' %}" style="font-size:13px;color:var(--primary);font-weight:600;">
+        Voir les clubs →
+      </a>
+    </div>
+  </div>
+
+
+  <div class="col-md-6 col-lg-4">
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:8px;">Contacter le club</div>
+      <p style="font-size:13px;color:#64748b;">
+        Prenez contact avec le club choisi afin d'obtenir les renseignements nécessaires concernant l'inscription et les modalités d'adhésion.
+      </p>
+    </div>
+  </div>
+
+  
+  <div class="col-md-6 col-lg-4">
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:8px;">Premier dossier d'inscription</div>
+      <p style="font-size:13px;color:#64748b;">
+        Présentez-vous au club afin de remplir le premier formulaire d'inscription avec l'administrateur du club.
+      </p>
+    </div>
+  </div>
+
+  
+  <div class="col-md-6 col-lg-4">
+    <div class="step-card">
+      <div class="step-num">4</div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:8px;">Retrait du dossier médical</div>
+      <p style="font-size:13px;color:#64748b;">
+        L'administrateur du club télécharge et vous remet les documents complémentaires, notamment le certificat médical obligatoire.
+      </p>
+
+      <div style="background:#fef3c7;border-radius:8px;padding:10px;font-size:12px;color:#d97706;margin-top:8px;">
+        <i class="bi bi-exclamation-triangle me-1"></i>
+        Certificat médical obligatoire
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="col-md-6 col-lg-4">
+    <div class="step-card">
+      <div class="step-num">5</div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:8px;">Dépôt du dossier complet</div>
+      <p style="font-size:13px;color:#64748b;">
+        Après la visite médicale, remettez votre dossier complété au club afin qu'il puisse être traité.
+      </p>
+    </div>
+  </div>
+
+  
+  <div class="col-md-6 col-lg-4">
+    <div class="step-card">
+      <div class="step-num">6</div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:8px;">Validation par la Ligue</div>
+      <p style="font-size:13px;color:#64748b;">
+        Le club transmet votre dossier à la Ligue d'Athlétisme de Tizi Ouzou pour validation et création de votre licence.
+      </p>
+
+      <div style="background:#dcfce7;border-radius:8px;padding:10px;font-size:12px;color:#16a34a;margin-top:8px;">
+        <i class="bi bi-check-circle me-1"></i>
+        Licence créée après validation
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<footer style="background:#0f172a;color:rgba(255,255,255,0.55);padding:50px 0 28px;font-size:13px;">
+  <div class="container">
+    <div class="row g-4 mb-4">
+      <div class="col-md-4">
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:#fff;margin-bottom:8px;">LATO</div>
+        <div>Ligue d'Athlétisme de Tizi Ouzou<br>Wilaya 15 — Algérie</div>
+        <div class="d-flex gap-3 mt-3">
+          <img src="/static/img/logo-ligue.png" alt="LATO" style="height:36px;opacity:0.7;">
+          <img src="/static/img/logo-federation.png" alt="FAA" style="height:36px;opacity:0.7;">
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div style="color:#fff;font-weight:600;font-size:13px;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;">Navigation</div>
+        <div class="d-flex flex-column gap-2">
+          <a href="{% url 'public_clubs' %}" style="color:rgba(255,255,255,0.55);text-decoration:none;">Annuaire des clubs</a>
+          <a href="{% url 'public_disciplines' %}" style="color:rgba(255,255,255,0.55);text-decoration:none;">Disciplines</a>
+          <a href="{% url 'public_home' %}#historique" style="color:rgba(255,255,255,0.55);text-decoration:none;">Histoire de la ligue</a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div style="color:#fff;font-weight:600;font-size:13px;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;">Espace membres</div>
+        <div class="d-flex flex-column gap-2">
+          <a href="{% url 'login' %}" style="color:rgba(255,255,255,0.55);text-decoration:none;">Connexion</a>
+        </div>
+        <div class="mt-4" style="font-size:12px;color:rgba(255,255,255,0.35);">
+          Les comptes sont créés par la Ligue.<br>Contactez un club affilié pour rejoindre la plateforme.
+        </div>
+      </div>
+    </div>
+    <hr style="border-color:rgba(255,255,255,0.08);margin:20px 0;">
+    <div class="text-center" style="font-size:12px;">
+      © 2026 Ligue d'Athlétisme de Tizi Ouzou — Tous droits réservés
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

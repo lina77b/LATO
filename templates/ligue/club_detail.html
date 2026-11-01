@@ -1,0 +1,63 @@
+
+{% extends "base.html" %}
+{% block title %}{{ club.nom }}{% endblock %}
+{% block page_title %}{{ club.nom }}{% endblock %}
+{% block sidebar_nav %}<span class="nav-section-label">Navigation</span>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_dashboard" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.house|safe }}</span></div><span>Dashboard</span></a></div>
+<div class="nav-item"><a class="nav-link-custom active" href="{% url "ligue_clubs" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.buildings|safe }}</span></div><span>Clubs</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_athletes" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span></div><span>Athletes</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_licences" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.identification_card|safe }}</span></div><span>Licences</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_records" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.trophy|safe }}</span></div><span>Records Wilaya</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_calendrier" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.calendar|safe }}</span></div><span>Calendrier</span></a></div>
+<span class="nav-section-label">Systeme</span>
+<div class="nav-item"><a class="nav-link-custom" href="/admin/"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.gear|safe }}</span></div><span>Administration</span></a></div>
+{% endblock %}
+{% block content %}
+<div class="section-header">
+  <div><div class="section-title">{{ club.nom }}</div><div class="section-sub"><i class="bi bi-geo-alt me-1"></i>{{ club.ville }} &middot; {{ club.wilaya }}</div></div>
+  <div class="d-flex gap-2">
+    <span class="badge {% if club.actif %}badge-jsk-green{% else %}badge-jsk-red{% endif %}">{% if club.actif %}Actif{% else %}Suspendu{% endif %}</span>
+    <form method="post" action="{% url 'club_toggle' club.pk %}" class="d-inline" onsubmit="return confirm('Confirmer ?')">{% csrf_token %}<button type="submit" class="btn btn-sm {% if club.actif %}btn-outline-danger{% else %}btn-jsk{% endif %}">{% if club.actif %}Suspendre{% else %}Activer{% endif %}</button></form>
+    <a href="{% url 'ligue_clubs' %}" class="btn btn-outline-jsk btn-sm"><i class="bi bi-arrow-left"></i></a>
+  </div>
+</div>
+<div class="row g-3 mb-3">
+  <div class="col-md-4">
+    <div class="card p-4">
+      <h6 class="card-title-custom mb-3">Informations</h6>
+      <div class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted" style="font-size:13px">Email</span><strong style="font-size:13px">{{ club.email|default:"--" }}</strong></div>
+      <div class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted" style="font-size:13px">Tel</span><strong style="font-size:13px">{{ club.telephone|default:"--" }}</strong></div>
+      <div class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted" style="font-size:13px">Athletes</span><strong style="font-size:13px;color:var(--jsk-green)">{{ club.nb_athletes }}</strong></div>
+      <div class="d-flex justify-content-between py-2"><span class="text-muted" style="font-size:13px">Licencies</span><strong style="font-size:13px;color:var(--jsk-green)">{{ club.nb_licencies }}</strong></div>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="card p-4">
+      <h6 class="card-title-custom mb-3">Dernieres performances</h6>
+      {% for p in perfs %}<div class="d-flex align-items-center gap-3 py-2 border-bottom">
+        <div class="avatar avatar-sm">{{ p.athlete.initiales }}</div>
+        <div class="flex-grow-1"><div style="font-size:13px;font-weight:600">{{ p.athlete.nom_complet }}</div><div style="font-size:11px;color:#adb5bd">{{ p.epreuve }} &middot; {{ p.date|date:"d/m/Y" }}</div></div>
+        <strong style="color:var(--jsk-green)">{{ p.performance }}</strong>
+      </div>{% endfor %}
+    </div>
+  </div>
+</div>
+<div class="card p-4">
+  <h6 class="card-title-custom mb-3">Athletes du club</h6>
+  <div class="table-responsive"><table class="table table-custom mb-0">
+    <thead><tr><th>Athlete</th><th>Categorie</th><th>Epreuves</th><th>Statut</th><th>Coach</th></tr></thead>
+    <tbody>
+    {% for a in athletes %}<tr>
+      <td><div class="d-flex align-items-center gap-2"><div class="avatar avatar-sm">{{ a.initiales }}</div>{{ a.nom_complet }}</div></td>
+      <td><span class="badge badge-jsk-blue">{{ a.categorie }}</span></td>
+      <td style="font-size:12px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ a.epreuves|join:", " }}</td>
+      <td>{% if a.statut_licence == 'licencie' %}<span class="badge badge-jsk-green"><i class="bi bi-check-circle-fill me-1"></i>Licencie</span>
+{% elif a.statut_licence == 'en_attente' %}<span class="badge badge-jsk-yellow"><i class="bi bi-hourglass-split me-1"></i>En attente</span>
+{% elif a.statut_licence == 'incomplet' %}<span class="badge badge-jsk-orange"><i class="bi bi-exclamation-triangle-fill me-1"></i>Incomplet</span>
+{% else %}<span class="badge badge-jsk-gray"><i class="bi bi-x-circle me-1"></i>Non licencie</span>{% endif %}</td>
+      <td style="font-size:12px;color:#6c757d">{{ a.coach.nom|default:"--" }}</td>
+    </tr>{% empty %}<tr><td colspan="5" class="text-center text-muted py-3">Aucun athlete</td></tr>{% endfor %}
+    </tbody>
+  </table></div>
+</div>
+{% endblock %}

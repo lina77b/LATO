@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LATO — Ligue d'Athlétisme de Tizi Ouzou</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-dark: #0f172a;
+      --gold: #f59e0b;
+      --gold-light: #fef3c7;
+      --green: #16a34a;
+      --gray: #64748b;
+      --light: #f8fafc;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--light); color: #1e293b; margin: 0; }
+
+    .navbar { background: var(--primary-dark); padding: 12px 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 20px rgba(0,0,0,0.3); }
+    .navbar-brand { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; color: #fff !important; display: flex; align-items: center; gap: 10px; }
+    .nav-link { color: rgba(255,255,255,0.75) !important; font-weight: 500; font-size: 14px; transition: color 0.2s; }
+    .nav-link:hover { color: var(--gold) !important; }
+    .btn-espace { background: var(--gold); color: #000 !important; font-weight: 700; font-size: 13px; padding: 8px 20px; border-radius: 8px; border: none; transition: background 0.2s; }
+    .btn-espace:hover { background: #d97706; }
+
+    .hero { position: relative; min-height: 600px; display: flex; align-items: center; overflow: hidden; background: var(--primary-dark); }
+    .hero-bg { position: absolute; inset: 0; background-image: url('/static/img/stade_ho.jpg'); background-size: cover; background-position: center; opacity: 0.5; }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(15,23,42,0.6) 0%, rgba(30,58,138,0.3) 60%, transparent 100%); }
+    .hero-content { position: relative; z-index: 2; padding: 80px 0; }
+    .hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(32px, 5vw, 58px); font-weight: 800; color: #fff; line-height: 1.1; margin-bottom: 16px; }
+    .hero h1 span { color: var(--gold); }
+    .hero p { font-size: 17px; color: rgba(255,255,255,0.75); max-width: 520px; line-height: 1.7; }
+    .hero-badge { display: inline-block; background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.4); color: var(--gold); font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; letter-spacing: 1px; text-transform: uppercase; }
+
+    .logos-band { background: #fff; padding: 28px 0; border-bottom: 1px solid #e2e8f0; }
+    .logos-band img { height: 60px; object-fit: contain; }
+    .logos-separator { width: 1px; height: 50px; background: #e2e8f0; }
+
+    .stats-band { background: var(--primary); padding: 32px 0; }
+    .stat-number { font-family: 'Syne', sans-serif; font-size: 38px; font-weight: 800; color: var(--gold); line-height: 1; }
+    .stat-label { font-size: 12px; color: rgba(255,255,255,0.65); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .section { padding: 70px 0; }
+    .section-alt { background: #fff; }
+    .section-tag { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+    .section-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(22px, 3vw, 32px); color: var(--primary); margin-bottom: 8px; line-height: 1.2; }
+    .section-sub { color: var(--gray); font-size: 14px; margin-bottom: 36px; }
+
+    .strength-card { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border-top: 3px solid var(--gold); height: 100%; transition: transform 0.2s; }
+    .strength-card:hover { transform: translateY(-4px); }
+    .strength-icon { width: 48px; height: 48px; border-radius: 12px; background: var(--gold-light); display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 14px; }
+    .strength-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; color: var(--primary); margin-bottom: 6px; }
+    .strength-text { font-size: 13px; color: var(--gray); line-height: 1.6; }
+
+    .stade-section { position: relative; overflow: hidden; background: var(--primary-dark); padding: 70px 0; }
+    .stade-bg { position: absolute; inset: 0; background-image: url('/static/img/stade-tizi.jpg'); background-size: cover; background-position: center; opacity: 0.2; }
+    .stade-content { position: relative; z-index: 2; color: #fff; }
+
+    .timeline { position: relative; padding-left: 28px; }
+    .timeline::before { content: ''; position: absolute; left: 7px; top: 8px; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--gold), var(--primary)); opacity: 0.3; }
+    .timeline-item { position: relative; margin-bottom: 32px; }
+    .timeline-dot { position: absolute; left: -24px; top: 6px; width: 14px; height: 14px; border-radius: 50%; background: var(--gold); border: 3px solid #fff; box-shadow: 0 0 0 2px var(--gold); }
+    .timeline-year { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .timeline-content { font-size: 14px; color: #475569; line-height: 1.7; }
+    .timeline-content strong { color: var(--primary-dark); }
+
+    .president-card { background: linear-gradient(135deg, var(--primary), #1e40af); border-radius: 20px; padding: 36px; color: #fff; }
+    .president-card .title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 22px; margin-bottom: 4px; }
+    .president-card .subtitle { color: var(--gold); font-size: 13px; font-weight: 600; margin-bottom: 16px; }
+    .president-card p { font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.7; margin: 0; }
+
+    .event-card { background: #fff; border-radius: 14px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); border-left: 4px solid var(--primary); margin-bottom: 14px; }
+    .event-date { font-size: 12px; color: var(--gray); }
+    .event-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; color: var(--primary); margin: 4px 0; }
+    .event-badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+
+    .record-row { padding: 11px 0; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
+    .record-row:last-child { border-bottom: none; }
+    .perf-val { font-family: 'Syne', sans-serif; font-weight: 800; color: var(--green); font-size: 17px; }
+
+    .club-card { background: #fff; border-radius: 16px; padding: 24px 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); text-align: center; height: 100%; transition: transform 0.2s; }
+    .club-card:hover { transform: translateY(-3px); }
+    .club-avatar { width: 52px; height: 52px; border-radius: 12px; background: #eff6ff; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 20px; color: var(--primary); }
+
+    footer { background: var(--primary-dark); color: rgba(255,255,255,0.55); padding: 50px 0 28px; font-size: 13px; }
+    footer .brand { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; color: #fff; margin-bottom: 8px; }
+    footer a { color: rgba(255,255,255,0.55); text-decoration: none; transition: color 0.2s; }
+    footer a:hover { color: var(--gold); }
+    footer .footer-title { color: #fff; font-weight: 600; font-size: 13px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  </style>
+</head>
+<body>
+
+
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'public_home' %}">
+      <img src="/static/img/logo-ligue.png" alt="LATO" style="height:36px;">
+      LATO
+    </a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#nav" style="filter:invert(1);">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav me-auto gap-1">
+        <li class="nav-item"><a class="nav-link" href="{% url 'public_home' %}">Accueil</a></li>
+        <li class="nav-item"><a class="nav-link" href="#historique">Histoire</a></li>  
+        <li class="nav-item"><a class="nav-link" href="{% url 'public_disciplines' %}">Disciplines</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'public_clubs' %}">Clubs</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'public_inscription'%}">Inscriptions</a></li>
+
+      </ul>
+      <a href="{% url 'login' %}" class="btn btn-espace">
+        <i class="bi bi-box-arrow-in-right me-1"></i>Espace membres
+      </a>
+    </div>
+  </div>
+</nav>
+
+
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="container hero-content">
+    <div class="row">
+      <div class="col-lg-7">
+        <div class="hero-badge">🏅 Wilaya 15 — Algérie</div>
+        <h1>Ligue d'Athlétisme<br>de <span>Tizi Ouzou</span></h1>
+        <p class="mt-3 mb-4">Plateforme officielle de gestion et de suivi des performances athlétiques de la wilaya de Tizi Ouzou.</p>
+        <div class="d-flex gap-3 flex-wrap">
+          <a href="{% url 'public_clubs' %}" class="btn btn-espace"><i class="bi bi-building me-2"></i>Trouver un club</a>
+          <a href="#historique" class="btn btn-outline-light"><i class="bi bi-book me-2"></i>Notre histoire</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<div class="logos-band">
+  <div class="container">
+    <div class="d-flex align-items-center justify-content-center gap-5 flex-wrap">
+      <div class="text-center">
+        <img src="/static/img/logo-ligue.png" alt="Ligue Athlétisme Tizi Ouzou">
+        <div style="font-size:11px;color:var(--gray);margin-top:6px;font-weight:600;">Ligue d'Athlétisme Tizi Ouzou</div>
+      </div>
+      <div class="logos-separator d-none d-md-block"></div>
+      <div class="text-center">
+        <img src="/static/img/logo-federation.png" alt="Fédération Algérienne d'Athlétisme">
+        <div style="font-size:11px;color:var(--gray);margin-top:6px;font-weight:600;">Fédération Algérienne d'Athlétisme</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="stats-band">
+  <div class="container">
+    <div class="row g-3 text-white text-center">
+      <div class="col-6 col-md-3">
+        <div class="stat-number">{{ clubs|length }}</div>
+        <div class="stat-label">Clubs affiliés</div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-number">{{ evenements|length }}</div>
+        <div class="stat-label">Compétitions</div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-number">{{ records|length }}</div>
+        <div class="stat-label">Records Wilaya</div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-number">40+</div>
+        <div class="stat-label">Années d'histoire</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<section class="section">
+  <div class="container">
+    <div class="text-center mb-5">
+      
+      <div class="section-title">Une ligue au service de l'athlétisme</div>
+      <div class="section-sub">Promotion, organisation et développement de l'athlétisme sur piste dans la wilaya de Tizi Ouzou.</div>
+    </div>
+    <div class="row g-3">
+      <div class="col-6 col-md-3">
+        <div class="strength-card">
+         
+          <div class="strength-title">Athlétisme sur piste</div>
+          <div class="strength-text">Organisation des compétitions de sprint, demi-fond, fond, haies, sauts et lancers.</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="strength-card">
+
+          <div class="strength-title">Clubs affiliés</div>
+          <div class="strength-text">Encadrement et accompagnement des clubs de la wilaya dans leurs activités sportives.</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="strength-card">
+        
+          <div class="strength-title">Jeunes catégories</div>
+          <div class="strength-text">Détection et développement des jeunes athlètes des différentes catégories.</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="strength-card">
+          
+          <div class="strength-title">Compétitions officielles</div>
+          <div class="strength-text">Organisation des championnats et meetings régionaux sous l'égide de la Fédération Algérienne d'Athlétisme.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section style="background:var(--primary-dark);padding:70px 0;">
+  <div class="container">
+    <div class="text-center mb-5">
+      <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Infrastructures</div>
+      <h2 style="font-family:'Syne',sans-serif;font-weight:800;font-size:32px;color:#fff;margin-bottom:8px;">Nos stades</h2>
+      <p style="color:rgba(255,255,255,0.6);font-size:14px;">Les compétitions se tiennent dans plusieurs infrastructures de la wilaya</p>
+    </div>
+    <div class="row g-4">
+
+      <div class="col-md-4">
+        <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:32px 24px;text-align:center;height:100%;transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)';this.style.borderColor='var(--gold)'" onmouseout="this.style.transform='translateY(0)';this.style.borderColor='rgba(255,255,255,0.1)'">
+          
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:#fff;margin-bottom:6px;">Stade Hocine Aït Ahmed</div>
+          <div style="font-size:12px;color:var(--gold);font-weight:600;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;">Boukhalfa — Tizi Ouzou</div>
+          <p style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.7;margin:0;">Nouveau stade moderne de la wilaya, en cours d'intégration dans le calendrier des compétitions régionales de la ligue.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:20px;padding:32px 24px;text-align:center;height:100%;transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+          
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:#fff;margin-bottom:6px;">Stade de Tirsatine</div>
+          <div style="font-size:12px;color:var(--gold);font-weight:600;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;">Azazga</div>
+          <p style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.7;margin:0;">Stade de la ville d'Azazga, accueillant les compétitions locales et les entraînements des clubs de la région.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:32px 24px;text-align:center;height:100%;transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)';this.style.borderColor='var(--gold)'" onmouseout="this.style.transform='translateY(0)';this.style.borderColor='rgba(255,255,255,0.1)'">
+         
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:#fff;margin-bottom:6px;">Stade du 1<sup>er</sup> Novembre 1954</div>
+          <div style="font-size:12px;color:var(--gold);font-weight:600;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;">Tizi Ouzou</div>
+          <p style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.7;margin:0;">Inauguré en 1978, ce stade historique a permis à la région de disposer d'une piste d'athlétisme moderne.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<section class="section section-alt" id="historique">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-5">
+        <div class="section-tag">Depuis des décennies</div>
+        <div class="section-title">Histoire de la ligue</div>
+        <div class="section-sub">L'athlétisme est implanté en Kabylie depuis plusieurs décennies. Terre de coureurs de fond, la région a toujours brillé grâce à son relief montagneux.</div>
+
+        <div class="president-card mt-4">
+          <div class="title">Hamici Kamel</div>
+          <div class="subtitle"> Président de la Ligue</div>
+          <p>Président actuel de la Ligue d'Athlétisme de Tizi Ouzou, il œuvre au développement et au rayonnement de l'athlétisme dans la wilaya.</p>
+        </div>
+
+        <div class="mt-4 p-3 rounded-3" style="background:#fffbeb;border:1px solid #fde68a;">
+          <div style="font-family:'Syne',sans-serif;font-weight:700;color:#92400e;font-size:14px;margin-bottom:6px;">
+             Saïd Cherdioui — Père de l'athlétisme local
+          </div>
+          <p style="font-size:13px;color:#78350f;margin:0;line-height:1.7;">
+            Figure emblématique de l'athlétisme à Tizi Ouzou. Le Challenge de cross-country créé en son honneur en 1978 est devenu une compétition internationale réunissant plus de <strong>1 500 athlètes</strong> à sa 40e édition, avec la participation de pays africains et arabes.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-lg-7">
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">Depuis 1946</div>
+            <div class="timeline-content">
+              <strong>Les origines</strong> — La Kabylie développe une tradition de courses pédestres grâce à son relief montagneux. La section athlétisme de la Jeunesse Sportive de Kabylie participe au développement de la discipline dès ses origines.
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">1978</div>
+            <div class="timeline-content">
+              <strong>Infrastructure moderne</strong> — Inauguration du Stade du 1er Novembre, dotant la région d'une piste d'athlétisme moderne. Lancement du <strong>Challenge Saïd Cherdioui</strong>, qui deviendra l'événement le plus emblématique de la ligue.
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">Années 1980</div>
+            <div class="timeline-content">
+              <strong>Essor des clubs</strong> — Plusieurs clubs se distinguent : JSK, JS Azazga, CSJ Aït Aïssi, Elite Sportive de Kabylie. Ces clubs fournissent régulièrement des champions nationaux chez les jeunes et les seniors.
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">Challenge Cherdioui</div>
+            <div class="timeline-content">
+              <strong>Rayonnement international</strong> — La compétition évolue de régionale à nationale puis internationale, avec des pays africains et arabes. La 40e édition a réuni plus de <strong>1 500 athlètes</strong>.
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year">Aujourd'hui</div>
+            <div class="timeline-content">
+              <strong>Développement continu</strong> — Sous la présidence de <strong>Hamici Kamel</strong>, la ligue poursuit le développement de l'athlétisme sur piste dans la wilaya et le soutien aux clubs affiliés.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<footer>
+  <div class="container">
+    <div class="row g-4 mb-4">
+      <div class="col-md-4">
+        <div class="brand">LATO</div>
+        <div>Ligue d'Athlétisme de Tizi Ouzou<br>Wilaya 15 — Algérie</div>
+        <div class="d-flex gap-3 mt-3">
+          <img src="/static/img/logo-ligue.png" alt="LATO" style="height:36px;opacity:0.7;">
+          <img src="/static/img/logo-federation.png" alt="FAA" style="height:36px;opacity:0.7;">
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="footer-title">Navigation</div>
+        <div class="d-flex flex-column gap-2">
+          <a href="{% url 'public_clubs' %}">Annuaire des clubs</a>
+          <a href="{% url 'public_disciplines' %}">Disciplines</a>
+          <a href="#historique">Histoire de la ligue</a>
+          <a href="#competitions">Compétitions</a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="footer-title">Espace membres</div>
+        <div class="d-flex flex-column gap-2">
+          <a href="{% url 'login' %}">Connexion</a>
+        </div>
+        <div class="mt-4" style="font-size:12px;color:rgba(255,255,255,0.35);">
+          Les comptes sont créés par la Ligue.<br>Contactez un club affilié pour rejoindre la plateforme.
+        </div>
+      </div>
+    </div>
+    <hr style="border-color:rgba(255,255,255,0.08);margin:20px 0;">
+    <div class="text-center" style="font-size:12px;">
+      © 2026 Ligue d'Athlétisme de Tizi Ouzou — Tous droits réservés
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

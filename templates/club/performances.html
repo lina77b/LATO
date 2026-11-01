@@ -1,0 +1,36 @@
+
+{% extends "base.html" %}
+{% block title %}Performances{% endblock %}
+{% block page_title %}Performances{% endblock %}
+{% block sidebar_nav %}<span class="nav-section-label">Mon Club</span>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_dashboard" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.house|safe }}</span></div><span>Dashboard</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_athletes" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span></div><span> Athletes</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_inscriptions" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.identification_card|safe }}</span></div><span>Inscriptions</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_coaches" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.chalkboard_teacher|safe }}</span></div><span>Coaches</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_groupes" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span></div><span>Groupes</span></a></div>
+<div class="nav-item"><a class="nav-link-custom active" href="{% url "club_performances" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.chart_line_up|safe }}</span></div><span>Performances</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_seances" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.timer|safe }}</span></div><span>Seances</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "club_calendrier" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.calendar|safe }}</span></div><span>Calendrier</span></a></div>
+{% endblock %}
+{% block content %}
+<div class="section-header">
+  <div class="section-title">Performances - {{ club.nom }}</div>
+</div>
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-custom mb-0">
+      <thead><tr><th>Date</th><th>Athlete</th><th>Epreuve</th><th>Performance</th><th>Lieu</th><th>Record</th></tr></thead>
+      <tbody>
+      {% for p in perfs %}<tr>
+        <td style="font-size:13px;color:#6c757d">{{ p.date|date:"d/m/Y" }}</td>
+        <td><div class="d-flex align-items-center gap-2"><div class="avatar avatar-sm">{{ p.athlete.initiales }}</div>{{ p.athlete.nom_complet }}</div></td>
+        <td style="font-size:13px">{{ p.epreuve }}</td>
+        <td><strong style="color:var(--jsk-green);font-size:15px">{{ p.performance }}</strong></td>
+        <td style="font-size:12px;color:#adb5bd">{{ p.lieu }}</td>
+        <td>{% if p.record_wilaya %}<span class="badge badge-jsk-yellow"><i class="bi bi-star-fill me-1"></i>RW</span>{% else %}<span class="badge badge-jsk-gray">--</span>{% endif %}</td>
+      </tr>{% empty %}<tr><td colspan="6" class="text-center py-4 text-muted">Aucune performance</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

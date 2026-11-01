@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %} Athlètes | LATO{% endblock %}
+{% block page_title %}Effectif du Club{% endblock %}
+
+{% block sidebar_nav %}
+<span class="nav-section-label">Mon Club</span>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url "club_dashboard" %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.house|safe }}</span></div>
+    <span>Dashboard</span>
+  </a>
+</div>
+<div class="nav-item">
+  <a class="nav-link-custom active" href="{% url "club_athletes" %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span></div>
+    <span>Athlètes</span>
+  </a>
+</div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url "club_inscriptions" %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.identification_card|safe }}</span></div>
+    <span>Inscriptions</span>
+  </a>
+</div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url "club_coaches" %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.chalkboard_teacher|safe }}</span></div>
+    <span>Coaches</span>
+  </a>
+</div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url "club_performances" %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.chart_line_up|safe }}</span></div>
+    <span>Performances</span>
+  </a>
+</div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url "club_seances" %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.timer|safe }}</span></div>
+    <span>Séances</span>
+  </a>
+</div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url "club_calendrier" %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.calendar|safe }}</span></div>
+    <span>Calendrier</span>
+  </a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="card p-4 border-0 shadow-sm">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h6 class="card-title-custom mb-0">
+      <span class="card-title-icon" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span>
+      Liste des athlètes
+    </h6>
+    <a href="{% url 'athlete_creer' %}" class="btn btn-jsk btn-sm">+ Nouvel athlète</a>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-custom">
+      <thead>
+        <tr>
+          <th>Athlète</th>
+          <th>Catégorie</th>
+          <th>Sexe</th>
+          <th>Statut Licence</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in athletes %}
+        <tr>
+          <td>
+            <div class="d-flex align-items-center gap-3">
+              <div class="avatar avatar-sm">{{ a.initiales }}</div>
+              <strong style="color:var(--text);">{{ a.nom_complet }}</strong>
+            </div>
+          </td>
+          <td>{{ a.categorie|default:"Non assigné" }}</td>
+          <td>{{ a.get_sexe_display }}</td>
+          <td>
+            {% if a.statut_licence == 'licencie' %}
+              <span class="badge badge-jsk-green"><i class="bi bi-check-circle-fill me-1"></i>Licencié</span>
+            {% elif a.statut_licence == 'en_attente' %}
+              <span class="badge badge-jsk-orange"><i class="bi bi-hourglass me-1"></i>En attente</span>
+            {% elif a.statut_licence == 'incomplet' %}
+              <span class="badge badge-jsk-red"><i class="bi bi-exclamation-triangle me-1"></i>Incomplet</span>
+            {% else %}
+              <span class="badge badge-jsk-gray">Non licencié</span>
+            {% endif %}
+          </td>
+          <td class="text-end">
+  <a href="{% url 'athlete_detail' a.pk %}" class="btn btn-outline-jsk btn-sm me-1" title="Voir profil">
+    <i class="bi bi-eye me-1"></i>Profil
+  </a>
+  <form method="post" action="{% url 'athlete_supprimer' a.pk %}" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement l\'athlète {{ a.nom_complet }} ?');">{% csrf_token %}<button type="submit" class="btn btn-danger btn-sm" title="Supprimer l'athlète">
+    <i class="bi bi-trash"></i>
+  </button></form>
+</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="text-center py-5 text-muted">
+            Aucun athlète dans votre club pour le moment.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

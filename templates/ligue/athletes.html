@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}Athletes{% endblock %}
+{% block page_title %}Athletes{% endblock %}
+{% block sidebar_nav %}<span class="nav-section-label">Navigation</span>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_dashboard" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.house|safe }}</span></div><span>Dashboard</span></a></div>
+<div class="nav-item"><a class="nav-link-custom active" href="{% url "ligue_athletes" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span></div><span>Athletes</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_clubs" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.buildings|safe }}</span></div><span>Clubs</span></a></div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url 'ligue_coaches' %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.chalkboard_teacher|safe }}</span></div>
+    <span>Coaches</span>
+  </a>
+</div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_licences" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.identification_card|safe }}</span></div><span>Licences</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_records" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.trophy|safe }}</span></div><span>Records Wilaya</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "ligue_calendrier" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.calendar|safe }}</span></div><span>Calendrier</span></a></div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url 'ligue_bilan' %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.medal|safe }}</span></div>
+    <span>Bilan Saisonnier</span>
+  </a>
+</div>
+<span class="nav-section-label">Systeme</span>
+<div class="nav-item"><a class="nav-link-custom" href="/admin/"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.gear|safe }}</span></div><span>Administration</span></a></div>
+{% endblock %}
+
+{% block content %}
+<style>
+  .filter-card select {
+    height: 38px !important;
+    border-radius: 8px !important;
+    border: 1px solid #e2e8f0 !important;
+    font-size: 13px !important;
+    background-color: #f8fafc !important;
+    padding: 0 10px !important;
+    width: 100%;
+  }
+  .filter-card select:focus, .search-bar-input:focus {
+    border-color: #0056b3 !important;
+    box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1) !important;
+    outline: none !important;
+  }
+</style>
+
+<div class="section-header">
+  <div><div class="section-title">Athletes</div><div class="section-sub">{{ total }} resultat(s)</div></div>
+</div>
+
+<form method="get">
+  <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-4">
+    
+    <div class="flex-grow-1" style="max-width: 500px;">
+      <div class="position-relative">
+        <span class="position-absolute top-50 translate-middle-y start-0 ps-3 text-muted" style="pointer-events: none; font-size: 14px;">🔍</span>
+        <input type="text" 
+               name="search" 
+               value="{{ request.GET.search|default:'' }}" 
+               class="form-control search-bar-input" 
+               placeholder="Rechercher un athlète (Nom, prénom...)"
+               style="height: 42px; padding-left: 40px; border-radius: 20px; border: 1px solid #e2e8f0; font-size: 14px; background-color: #f8fafc;">
+      </div>
+    </div>
+
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-jsk" style="height: 42px; padding: 0 20px; border-radius: 20px; font-weight: 600; font-size: 13px;">
+        Rechercher
+      </button>
+      {% if request.GET.search or request.GET.club or request.GET.categorie or request.GET.sexe or request.GET.statut %}
+        <a href="{% url 'ligue_athletes' %}" class="btn btn-light d-flex align-items-center justify-content-center" style="height: 42px; width: 42px; border-radius: 50%; border: 1px solid #e2e8f0;" title="Réinitialiser">
+          ✕
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card p-3 mb-4 shadow-sm border-0 filter-card" style="background-color: #ffffff; border-radius: 12px;">
+    <div class="row g-3">
+      
+      <div class="col-12 col-sm-6 col-md-3">
+        <label class="form-label small text-muted fw-semibold mb-1">Structure / Club</label>
+        {{ form.club }}
+      </div>
+
+      <div class="col-6 col-sm-3 col-md-3">
+        <label class="form-label small text-muted fw-semibold mb-1">Catégorie d'âge</label>
+        {{ form.categorie }}
+      </div>
+
+      <div class="col-6 col-sm-3 col-md-2">
+        <label class="form-label small text-muted fw-semibold mb-1">Genre</label>
+        {{ form.sexe }}
+      </div>
+
+      <div class="col-12 col-md-4">
+        <label class="form-label small text-muted fw-semibold mb-1">Statut de la Licence</label>
+        {{ form.statut }}
+      </div>
+
+    </div>
+  </div>
+</form>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-custom mb-0">
+    <thead><tr>
+      <th>Athlete</th><th>Club</th><th>Cat.</th><th>Sexe</th>
+      <th>Epreuves</th><th>Statut</th><th>Licence</th><th>Actions</th>
+    </tr></thead>
+    <tbody>
+    {% for a in athletes %}
+    <tr>
+      <td><div class="d-flex align-items-center gap-2">
+        <div class="avatar avatar-sm">{{ a.initiales }}</div>
+        <div>
+          <a href="{% url 'ligue_athlete_detail' a.pk %}" style="font-weight:600; color: #0056b3; text-decoration: none;">{{ a.nom_complet }}</a>
+          <div style="font-size:11px;color:#adb5bd">{% if a.age %}{{ a.age }} ans{% endif %}</div>
+        </div>
+      </div></td>
+      <td style="font-size:13px">{{ a.club.nom|default:"--" }}</td>
+      <td><span class="badge badge-jsk-blue">{{ a.categorie }}</span></td>
+      <td>{% if a.sexe == 'M' %}♂{% else %}♀{% endif %}</td>
+      <td style="font-size:12px;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ a.epreuves|join:", " }}</td>
+      <td>
+        {% if a.statut_licence == 'licencie' %}<span class="badge badge-jsk-green"><i class="me-1"></i>Licencie</span>
+        {% elif a.statut_licence == 'en_attente' %}<span class="badge badge-jsk-yellow"><i class="me-1"></i>En attente</span>
+        {% elif a.statut_licence == 'incomplet' %}<span class="badge badge-jsk-orange"><i class="me-1"></i>Incomplet</span>
+        {% else %}<span class="badge badge-jsk-gray"><i class="me-1"></i>Non licencie</span>{% endif %}
+      </td>
+      <td style="font-size:12px;font-weight:600;color:var(--jsk-green)">{{ a.licence_no|default:"--" }}</td>
+      <td><div class="d-flex gap-1 align-items-center">
+        {% if a.statut_licence == 'en_attente' %}
+          <form method="post" action="{% url 'valider_licence' a.pk %}" class="d-inline" onsubmit="return confirm('Valider ?')">{% csrf_token %}<button type="submit" class="btn btn-jsk btn-sm">Valider</button></form>
+        {% endif %}
+        <form action="{% url 'ligue_athlete_supprimer' a.pk %}" method="post" onsubmit="return confirm('Es-tu sûre de vouloir supprimer définitivement cet athlète ?');" style="display:inline; margin:0;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-danger btn-sm" style="font-size: 11px; padding: 2px 6px; font-weight: 600;">
+            Supprimer
+          </button>
+        </form>
+      </div></td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="8" class="text-center py-4 text-muted">Aucun athlete trouve</td></tr>
+    {% endfor %}
+    </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

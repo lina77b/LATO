@@ -1,0 +1,23 @@
+# Environnement
+.venv/
+venv/
+.env
+
+# Python
+__pycache__/
+*.pyc
+
+# Base de données et données sensibles
+db.sqlite3
+data.json
+*.sqlite3
+
+# Fichiers générés / uploadés (certificats médicaux, etc.)
+staticfiles/
+media/*
+!media/.gitkeep
+
+# Divers
+.DS_Store
+.idea/
+.vscode/

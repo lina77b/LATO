@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+{% block title %}Dashboard Ligue{% endblock %}
+{% block page_title %}Tableau de bord{% endblock %}
+{% block sidebar_nav %}
+<span class="nav-section-label">Navigation</span>
+<div class="nav-item">
+  <a class="nav-link-custom active" href="{% url 'ligue_dashboard' %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.house|safe }}</span></div>
+    <span>Dashboard</span>
+  </a>
+</div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url 'ligue_clubs' %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.buildings|safe }}</span></div>
+    <span>Clubs</span>
+  </a>
+</div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url 'ligue_athletes' %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span></div>
+    <span>Athletes</span>
+  </a>
+</div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url 'ligue_coaches' %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.chalkboard_teacher|safe }}</span></div>
+    <span>Coaches</span>
+  </a>
+</div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url 'ligue_licences' %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.identification_card|safe }}</span></div>
+    <span>Licences</span>
+  </a>
+</div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url 'ligue_records' %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.trophy|safe }}</span></div>
+    <span>Records Wilaya</span>
+  </a>
+</div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url 'ligue_calendrier' %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.calendar|safe }}</span></div>
+    <span>Calendrier</span>
+  </a>
+</div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url 'ligue_bilan' %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.medal|safe }}</span></div>
+    <span>Bilan Saisonnier</span>
+  </a>
+</div>
+<span class="nav-section-label">Systeme</span>
+<div class="nav-item">
+  <a class="nav-link-custom" href="/admin/">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.gear|safe }}</span></div>
+    <span>Administration</span>
+  </a>
+</div>
+{% endblock %}
+{% block content %}
+<div class="section-header">
+  <div>
+    <div class="section-title">Vue d'ensemble</div>
+    <div class="section-sub">Ligue de Tizi Ouzou &mdash; Saison {{ saison }}</div>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'ligue_clubs' %}" class="btn btn-outline-jsk btn-sm">
+      <span class="ico ico-green me-1" style="display:inline-flex;align-items:center;">{{ ICONS.buildings|safe }}</span>Clubs
+    </a>
+    <a href="{% url 'club_creer' %}" class="btn btn-jsk btn-sm">+ Nouveau club</a>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3">
+    <div class="stat-card green">
+      <div class="stat-icon-wrap">
+        <span class="stat-icon-img" style="filter:brightness(0) invert(1); display:inline-flex; align-items:center;">{{ ICONS.users_three|safe }}</span>
+      </div>
+      <div class="stat-label">Athletes licencies</div>
+      <div class="stat-value">{{ stats.nb_licencies }}</div>
+      <div class="stat-sub">/ {{ stats.nb_total }} total</div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card yellow">
+      <div class="stat-icon-wrap">
+        <span class="stat-icon-img" style="display:inline-flex;align-items:center;">{{ ICONS.buildings|safe }}</span>
+      </div>
+      <div class="stat-label">Clubs actifs</div>
+      <div class="stat-value">{{ stats.nb_clubs_actifs }}</div>
+      <div class="stat-sub">/ {{ stats.nb_clubs_total }} affilies</div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card red">
+      <div class="stat-icon-wrap">
+        <span class="stat-icon-img" style="filter:brightness(0) invert(1); display:inline-flex; align-items:center;">{{ ICONS.identification_card|safe }}</span>
+      </div>
+      <div class="stat-label">Licences en attente</div>
+      <div class="stat-value">{{ stats.nb_attente }}</div>
+      <div class="stat-sub">A valider</div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card blue">
+      <div class="stat-icon-wrap">
+        <span class="stat-icon-img" style="filter:brightness(0) invert(1); display:inline-flex; align-items:center;">{{ ICONS.trophy|safe }}</span>
+      </div>
+      <div class="stat-label">Records Wilaya</div>
+      <div class="stat-value">{{ stats.nb_records }}</div>
+      <div class="stat-sub">{{ stats.nb_perfs }} performances</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-lg-5">
+    <div class="card h-100 p-4">
+      <div class="card-header-custom">
+        <h6 class="card-title-custom">
+          <span class="card-title-icon" style="display:inline-flex;align-items:center;">{{ ICONS.chart_line_up|safe }}</span>
+          Athletes par club
+        </h6>
+        <a href="{% url 'ligue_clubs' %}" class="btn btn-outline-jsk btn-sm">Voir tous</a>
+      </div>
+      {% for item in clubs_top %}
+      <div class="mini-bar">
+        <div class="mini-bar-label" title="{{ item.club.nom }}">{{ item.club.nom|truncatechars:14 }}</div>
+        <div class="mini-bar-track">
+          <div class="mini-bar-fill" style="width:{% if clubs_top.0.nb > 0 %}{% widthratio item.nb clubs_top.0.nb 100 %}{% else %}0{% endif %}%"></div>
+        </div>
+        <div class="mini-bar-val">{{ item.nb }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="col-lg-7">
+    <div class="card h-100 p-4">
+      <div class="card-header-custom">
+        <h6 class="card-title-custom">
+          <span class="card-title-icon" style="display:inline-flex;align-items:center;">{{ ICONS.timer|safe }}</span>
+          Dernieres performances
+        </h6>
+        <span class="badge badge-green px-3 py-1">En direct</span>
+      </div>
+      {% for p in perfs_recentes %}
+      <div class="d-flex align-items-center gap-3 py-2 border-bottom">
+        <div class="avatar avatar-sm">{{ p.athlete.initiales }}</div>
+        <div class="flex-grow-1">
+          <div style="font-size:13.5px;font-weight:600;">{{ p.athlete.nom_complet }}</div>
+          <div style="font-size:11.5px;color:var(--text-3);">{{ p.epreuve }} &middot; {{ p.athlete.club.nom|default:"-" }}</div>
+        </div>
+        <strong style="color:var(--green);font-size:15px;font-family:'Syne',sans-serif;">{{ p.performance }}</strong>
+        {% if p.record_wilaya %}
+        <span class="badge badge-gold px-2 py-1">
+          <span style="width:10px;height:10px;filter:invert(68%) sepia(60%) saturate(500%) hue-rotate(5deg);vertical-align:middle; display:inline-flex; align-items:center;">{{ ICONS.star|safe }}</span> RW
+        </span>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-5">
+    <div class="card p-4">
+      <div class="card-header-custom">
+        <h6 class="card-title-custom">
+          <span class="card-title-icon" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span>
+          Categories
+        </h6>
+      </div>
+      <div class="row g-2">
+        {% for cat, nb in categories.items %}
+        <div class="col-4">
+          <div style="background:var(--bg);border-radius:10px;padding:12px;text-align:center;border:1px solid var(--border);">
+            <div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--green);">{{ nb }}</div>
+            <div style="font-size:10.5px;color:var(--text-3);margin-top:2px;">{{ cat }}s</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-7">
+    <div class="card p-4">
+      <div class="card-header-custom">
+        <h6 class="card-title-custom">
+          <span class="card-title-icon" style="filter:invert(20%) sepia(90%) saturate(500%) hue-rotate(330deg); display:inline-flex; align-items:center;">{{ ICONS.identification_card|safe }}</span>
+          Licences a valider
+        </h6>
+        <a href="{% url 'ligue_licences' %}" class="btn btn-jsk btn-sm">Tout voir</a>
+      </div>
+      {% for a in licences_attente %}
+      <div class="d-flex align-items-center gap-3 py-2 border-bottom">
+        <div class="avatar avatar-sm">{{ a.initiales }}</div>
+        <div class="flex-grow-1">
+          <div style="font-size:13.5px;font-weight:600;">{{ a.nom_complet }}</div>
+          <div style="font-size:11.5px;color:var(--text-3);">{{ a.club.nom|default:"--" }} &middot; {{ a.categorie }}</div>
+        </div>
+        <div class="d-flex gap-2">
+          <form method="post" action="{% url 'rejeter_licence' a.pk %}" class="d-inline" onsubmit="return confirm('Rejeter ?')">{% csrf_token %}<button type="submit" class="btn btn-sm btn-outline-danger" title="Rejeter">
+            <span style="width:14px;height:14px;filter:invert(20%) sepia(90%) saturate(500%) hue-rotate(330deg); display:inline-flex; align-items:center;">{{ ICONS.x_circle|safe }}</span>
+          </button></form>
+          <form method="post" action="{% url 'valider_licence' a.pk %}" class="d-inline" onsubmit="return confirm('Valider la licence de {{ a.nom_complet }} ?')">{% csrf_token %}<button type="submit" class="btn btn-sm btn-jsk">
+            <span style="width:14px;height:14px;filter:brightness(0) invert(1);vertical-align:middle; display:inline-flex; align-items:center;">{{ ICONS.check_circle|safe }}</span> Valider
+          </button></form>
+        </div>
+      </div>
+      {% empty %}
+      <div class="text-center py-4 text-muted" style="font-size:13px;">
+        <span style="width:32px;height:32px;filter:invert(40%) sepia(80%) saturate(400%) hue-rotate(90deg);opacity:0.7;margin-bottom:8px;display:block;margin-inline:auto;">{{ ICONS.check_circle|safe }}</span>
+        Aucune demande en attente
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Demande de Licence - {{ athlete.nom_complet }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #ffffff; font-family: 'Segoe UI', Arial, sans-serif; color: #2d3748; }
+        .print-container { max-width: 800px; margin: 20px auto; padding: 40px; border: 1px solid #cbd5e1; border-radius: 8px; }
+        .header-title { border-bottom: 3px solid #0056b3; padding-bottom: 10px; color: #0056b3; font-weight: 700; }
+        .section-title { background-color: #f1f5f9; padding: 6px 12px; font-weight: 600; font-size: 13px; text-transform: uppercase; margin-top: 30px; margin-bottom: 15px; border-left: 4px solid #0056b3; }
+        .meta-label { font-weight: 600; color: #4a5568; width: 35%; display: inline-block; }
+        .medical-box { border: 2px dashed #a0aec0; border-radius: 8px; padding: 30px; margin-top: 40px; background-color: #f7fafc; }
+        
+        @media print {
+            .no-print { display: none !important; }
+            .print-container { border: none; margin: 0; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container no-print text-center mt-3 bg-light p-2 rounded border">
+    <p class="small text-muted mb-2">Une boîte de dialogue vient de s'ouvrir. Choisissez "Enregistrer au format PDF" ou sélectionnez votre imprimante.</p>
+    <button onclick="window.print()" class="btn btn-primary btn-sm px-4 fw-bold">🖨️ Relancer l'impression</button>
+    <button onclick="window.close()" class="btn btn-outline-secondary btn-sm px-3">Fermer cette page</button>
+</div>
+
+<div class="print-container">
+    <div class="row align-items-center mb-4">
+        <div class="col-8">
+            <h4 class="header-title mb-1">LIGUE D'ATHLÉTISME DE TIZI OUZOU</h4>
+            <p class="text-muted small mb-0">Formulaire d'engagement et certificat de licence athlète</p>
+        </div>
+        <div class="col-4 text-end">
+            <span class="badge bg-dark p-2" style="font-size: 13px; letter-spacing: 1px;">SAISON 2026</span>
+        </div>
+    </div>
+
+    <div class="section-title">Informations Civiles & Sportives</div>
+    <div class="row g-3 px-2" style="font-size: 14px;">
+        <div class="col-6"><span class="meta-label">Nom Complet :</span> <strong>{{ athlete.nom_complet }}</strong></div>
+        <div class="col-6"><span class="meta-label">Genre :</span> <span>{% if athlete.sexe == 'M' %}Masculin (♂){% else %}Féminin (♀){% endif %}</span></div>
+        <div class="col-6"><span class="meta-label">Âge de l'athlète :</span> <span>{% if athlete.age %}{{ athlete.age }} ans{% else %}-- ans{% endif %}</span></div>
+        <div class="col-6"><span class="meta-label">Catégorie :</span> <span class="badge bg-secondary">{{ athlete.categorie }}</span></div>
+        <div class="col-12"><span class="meta-label">Club Demandeur :</span> <span>{{ club.nom }}</span></div>
+        <div class="col-12"><span class="meta-label">Épreuve(s) :</span> <span>{{ athlete.epreuves|join:", "|default:"Non spécifiées" }}</span></div>
+    </div>
+
+    <div class="medical-box">
+        <h5 class="fw-bold text-center text-primary mb-4" style="letter-spacing: 0.5px;">CERTIFICAT MÉDICAL DE NON CONTRE-INDICATION</h5>
+        <p style="line-height: 2; font-size: 15px;">
+            Je soussigné, Docteur en médecine .........................................................................................., <br>
+            certifie avoir examiné ce jour l'athlète <strong>{{ athlete.nom_complet }}</strong> <br>
+            et n'avoir constaté aucune contre-indication clinique à la pratique de l'<strong>Athlétisme en compétition</strong>.
+        </p>
+        
+        <div class="row mt-5 pt-4">
+            <div class="col-6">
+                <p class="small mb-2">Fait à : .....................................................</p>
+                <p class="small">Le : .........................................................</p>
+            </div>
+            <div class="col-6 text-center">
+                <p class="small fw-semibold mb-5">Signature et Cachet du Médecin :</p>
+                <div class="col-8 mx-auto" style="border-top: 1px dashed #cbd5e1; padding-top: 5px; font-size: 11px; color: #718096;">
+                    (Mention manuscrite "Lu et approuvé")
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5 pt-4 text-center text-muted" style="font-size: 10px; border-top: 1px solid #e2e8f0;">
+        Document édité via la plateforme officielle de gestion des clubs d'athlétisme — Wilaya de Tizi Ouzou.
+    </div>
+</div>
+
+<script>
+    # Déclenche l'affichage automatique de la fenêtre d'impression/PDF
+    window.onload = function() {
+        window.print();
+    }
+</script>
+
+</body>
+</html>

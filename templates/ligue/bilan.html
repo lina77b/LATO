@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+{% block title %}Bilan Saisonnier{% endblock %}
+{% block page_title %}Bilan Saisonnier{% endblock %}
+{% block sidebar_nav %}
+<span class="nav-section-label">Navigation</span>
+<div class="nav-item"><a class="nav-link-custom" href="{% url 'ligue_dashboard' %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.house|safe }}</span></div><span>Dashboard</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url 'ligue_clubs' %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.buildings|safe }}</span></div><span>Clubs</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url 'ligue_athletes' %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span></div><span>Athletes</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url 'ligue_coaches' %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.chalkboard_teacher|safe }}</span></div><span>Coaches</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url 'ligue_licences' %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.identification_card|safe }}</span></div><span>Licences</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url 'ligue_records' %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.trophy|safe }}</span></div><span>Records Wilaya</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url 'ligue_calendrier' %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.calendar|safe }}</span></div><span>Calendrier</span></a></div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url 'ligue_bilan' %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.medal|safe }}</span></div>
+    <span>Bilan Saisonnier</span>
+  </a>
+</div>
+
+<span class="nav-section-label">Systeme</span>
+<div class="nav-item"><a class="nav-link-custom" href="/admin/"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.gear|safe }}</span></div><span>Administration</span></a></div>
+{% endblock %}
+
+{% block content %}
+<div class="section-header">
+  <div>
+    <div class="section-title">Bilan Saisonnier</div>
+    <div class="section-sub">Ligue de Tizi Ouzou — Saison {{ saison }}</div>
+  </div>
+  <div class="d-flex gap-2 align-items-center">
+    {% for s in saisons %}
+    <a href="?saison={{ s }}" class="btn btn-sm {% if s == saison %}btn-jsk{% else %}btn-outline-jsk{% endif %}">{{ s }}</a>
+    {% endfor %}
+  </div>
+</div>
+
+
+<div class="card p-4 mb-4">
+  <h6 class="card-title-custom mb-3"><i class="bi bi-table me-2"></i>Effectifs par club et par catégorie</h6>
+  <div class="table-responsive">
+    <table class="table table-custom mb-0" style="font-size:12px;">
+      <thead>
+        <tr>
+          <th rowspan="2" style="vertical-align:middle;">Club</th>
+          {% for cat in categories %}
+          <th colspan="3" class="text-center" style="border-left:1px solid #e2e8f0;">{{ cat }}</th>
+          {% endfor %}
+          <th colspan="3" class="text-center" style="border-left:2px solid #94a3b8;background:#f1f5f9;">TOTAL</th>
+        </tr>
+        <tr>
+          {% for cat in categories %}
+          <th class="text-center" style="border-left:1px solid #e2e8f0;">H</th>
+          <th class="text-center">F</th>
+          <th class="text-center">T</th>
+          {% endfor %}
+          <th class="text-center" style="border-left:2px solid #94a3b8;background:#f1f5f9;">H</th>
+          <th class="text-center" style="background:#f1f5f9;">F</th>
+          <th class="text-center" style="background:#f1f5f9;">T</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in tableau_clubs %}
+        <tr>
+          <td style="font-weight:600;">{{ row.club.nom }}</td>
+          {% for cat in categories %}
+          <td class="text-center" style="border-left:1px solid #e2e8f0;">{{ row.categories|get_item:cat|get_item:'H'|default:'0' }}</td>
+          <td class="text-center">{{ row.categories|get_item:cat|get_item:'F'|default:'0' }}</td>
+          <td class="text-center" style="font-weight:600;">{{ row.categories|get_item:cat|get_item:'total'|default:'0' }}</td>
+          {% endfor %}
+          <td class="text-center" style="border-left:2px solid #94a3b8;font-weight:700;background:#f8fafc;">{{ row.total_H }}</td>
+          <td class="text-center" style="font-weight:700;background:#f8fafc;">{{ row.total_F }}</td>
+          <td class="text-center" style="font-weight:700;background:#f8fafc;color:var(--primary-blue);">{{ row.total }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="100" class="text-center text-muted py-3">Aucun club actif</td></tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr style="background:#e8f4fd;font-weight:700;">
+          <td>TOTAL GÉNÉRAL</td>
+          {% for cat in categories %}
+          <td class="text-center" style="border-left:1px solid #e2e8f0;">{{ totaux|get_item:cat|get_item:'H'|default:'0' }}</td>
+          <td class="text-center">{{ totaux|get_item:cat|get_item:'F'|default:'0' }}</td>
+          <td class="text-center">{{ totaux|get_item:cat|get_item:'total'|default:'0' }}</td>
+          {% endfor %}
+          <td class="text-center" style="border-left:2px solid #94a3b8;">{{ totaux.TOTAL.H }}</td>
+          <td class="text-center">{{ totaux.TOTAL.F }}</td>
+          <td class="text-center" style="color:var(--primary-blue);">{{ totaux.TOTAL.total }}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+
+
+<div class="card p-4 mb-4">
+  <h6 class="card-title-custom mb-3"><i class="bi bi-calendar-event me-2"></i>Actions programmées — Compétitions</h6>
+  <div class="table-responsive">
+    <table class="table table-custom mb-0">
+      <thead><tr><th>Compétition</th><th>Date</th><th>Lieu</th><th>Épreuves</th><th>Type</th></tr></thead>
+      <tbody>
+        {% for e in competitions %}
+        <tr>
+          <td style="font-weight:600;">{{ e.titre }}</td>
+          <td style="font-size:13px;color:#6c757d;">{{ e.date|date:"d/m/Y" }}</td>
+          <td style="font-size:13px;color:#6c757d;">{{ e.lieu }}</td>
+          <td style="font-size:12px;">{{ e.epreuves }}</td>
+          <td><span class="badge badge-jsk-gray">{{ e.get_type_event_display }}</span></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="text-center text-muted py-3">Aucune compétition programmée</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<div class="card p-4 mb-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h6 class="card-title-custom mb-0"><i class="bi bi-trophy me-2" style="color:#f59e0b;"></i>État des Lauréats — Résultats Nationaux</h6>
+    <button class="btn btn-jsk btn-sm" data-bs-toggle="modal" data-bs-target="#modalPalmares">
+      <i class="bi bi-plus me-1"></i>Ajouter un résultat
+    </button>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-custom mb-0">
+      <thead>
+        <tr>
+          <th>Athlète</th><th>Club</th><th>Catégorie</th><th>Nature</th>
+          <th>Compétition</th><th>Date</th><th>Lieu</th><th>Épreuve</th>
+          <th>Classement</th><th>Perf.</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in laureats %}
+        <tr>
+          <td style="font-weight:600;">{{ p.athlete.nom_complet }}</td>
+          <td style="font-size:12px;">{{ p.athlete.club.nom|default:"--" }}</td>
+          <td style="font-size:12px;">{{ p.athlete.categorie }}</td>
+          <td style="font-size:12px;">{{ p.get_nature_display }}</td>
+          <td style="font-size:12px;">{{ p.competition }}</td>
+          <td style="font-size:12px;color:#6c757d;">{{ p.date|date:"d/m/Y"|default:"--" }}</td>
+          <td style="font-size:12px;color:#6c757d;">{{ p.lieu|default:"--" }}</td>
+          <td style="font-size:12px;font-weight:600;">{{ p.epreuve }}</td>
+          <td>
+            {% if p.classement == 'or' %}
+              <span class="badge" style="background:#fbbf24;color:#000;"><i class="bi bi-trophy-fill me-1"></i>Or</span>
+            {% elif p.classement == 'argent' %}
+              <span class="badge" style="background:#94a3b8;color:#fff;"><i class="bi bi-trophy-fill me-1"></i>Argent</span>
+            {% elif p.classement == 'bronze' %}
+              <span class="badge" style="background:#b45309;color:#fff;"><i class="bi bi-trophy-fill me-1"></i>Bronze</span>
+            {% endif %}
+          </td>
+          <td style="font-size:13px;font-weight:600;color:var(--jsk-green);">{{ p.performance|default:"--" }}</td>
+          <td>
+            <form method="post" action="{% url 'palmares_supprimer' p.pk %}" onsubmit="return confirm('Supprimer ?')">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="11" class="text-center text-muted py-3">Aucun lauréat enregistré pour cette saison</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<div class="card p-4 mb-4">
+  <h6 class="card-title-custom mb-3"><i class="bi bi-award me-2" style="color:var(--primary-blue);"></i>État des Finalistes</h6>
+  <div class="table-responsive">
+    <table class="table table-custom mb-0">
+      <thead>
+        <tr>
+          <th>Athlète</th><th>Club</th><th>Catégorie</th><th>Nature</th>
+          <th>Compétition</th><th>Date</th><th>Lieu</th><th>Épreuve</th><th>Perf.</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in finalistes %}
+        <tr>
+          <td style="font-weight:600;">{{ p.athlete.nom_complet }}</td>
+          <td style="font-size:12px;">{{ p.athlete.club.nom|default:"--" }}</td>
+          <td style="font-size:12px;">{{ p.athlete.categorie }}</td>
+          <td style="font-size:12px;">{{ p.get_nature_display }}</td>
+          <td style="font-size:12px;">{{ p.competition }}</td>
+          <td style="font-size:12px;color:#6c757d;">{{ p.date|date:"d/m/Y"|default:"--" }}</td>
+          <td style="font-size:12px;color:#6c757d;">{{ p.lieu|default:"--" }}</td>
+          <td style="font-size:12px;font-weight:600;">{{ p.epreuve }}</td>
+          <td style="font-size:13px;font-weight:600;color:var(--jsk-green);">{{ p.performance|default:"--" }}</td>
+          <td>
+            <form method="post" action="{% url 'palmares_supprimer' p.pk %}" onsubmit="return confirm('Supprimer ?')">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="10" class="text-center text-muted py-3">Aucun finaliste enregistré pour cette saison</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<div class="modal fade" id="modalPalmares" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Ajouter un résultat au palmarès</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form method="post" action="{% url 'palmares_creer' %}">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label" style="font-size:12px;font-weight:600;">Athlète</label>
+              <select name="athlete" class="form-select form-select-sm" required>
+                <option value="">-- Choisir --</option>
+                {% for a in all_athletes %}
+                <option value="{{ a.pk }}">{{ a.nom_complet }} ({{ a.club.nom|default:"--" }})</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" style="font-size:12px;font-weight:600;">Saison</label>
+              <select name="saison" class="form-select form-select-sm">
+                {% for s in saisons %}<option value="{{ s }}" {% if s == saison %}selected{% endif %}>{{ s }}</option>{% endfor %}
+              </select>
+            </div>
+            <div class="col-md-8">
+              <label class="form-label" style="font-size:12px;font-weight:600;">Nom de la compétition</label>
+              <input type="text" name="competition" class="form-control form-control-sm" required placeholder="ex: Championnat National Junior">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" style="font-size:12px;font-weight:600;">Nature</label>
+              <select name="nature" class="form-select form-select-sm">
+                <option value="national">National</option>
+                <option value="regional">Régional</option>
+                <option value="wilaya">Wilaya</option>
+                <option value="international">International</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" style="font-size:12px;font-weight:600;">Épreuve</label>
+              <input type="text" name="epreuve" class="form-control form-control-sm" required placeholder="ex: 100m, Longueur...">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" style="font-size:12px;font-weight:600;">Classement</label>
+              <select name="classement" class="form-select form-select-sm">
+                <option value="or">🥇 Or — 1ère place</option>
+                <option value="argent">🥈 Argent — 2ème place</option>
+                <option value="bronze">🥉 Bronze — 3ème place</option>
+                <option value="finaliste">Finaliste</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" style="font-size:12px;font-weight:600;">Performance</label>
+              <input type="text" name="performance" class="form-control form-control-sm" placeholder="ex: 10.85, 7m23...">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" style="font-size:12px;font-weight:600;">Date</label>
+              <input type="date" name="date" class="form-control form-control-sm">
+            </div>
+            <div class="col-md-8">
+              <label class="form-label" style="font-size:12px;font-weight:600;">Lieu</label>
+              <input type="text" name="lieu" class="form-control form-control-sm" placeholder="ex: Alger, Oran...">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-jsk" data-bs-dismiss="modal">Annuler</button>
+          <button type="submit" class="btn btn-jsk">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Disciplines — LATO</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-dark: #0f172a;
+      --gold: #f59e0b;
+      --gold-light: #fef3c7;
+      --green: #16a34a;
+      --gray: #64748b;
+      --light: #f8fafc;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--light); color: #1e293b; margin: 0; }
+
+    .navbar { background: var(--primary-dark); padding: 12px 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 20px rgba(0,0,0,0.3); }
+    .navbar-brand { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; color: #fff !important; display: flex; align-items: center; gap: 10px; }
+    .nav-link { color: rgba(255,255,255,0.75) !important; font-weight: 500; font-size: 14px; transition: color 0.2s; }
+    .nav-link:hover { color: var(--gold) !important; }
+    .btn-espace { background: var(--gold); color: #000 !important; font-weight: 700; font-size: 13px; padding: 8px 20px; border-radius: 8px; border: none; transition: background 0.2s; }
+    .btn-espace:hover { background: #d97706; }
+    .page-header { background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%); color: #fff; padding: 50px 0; }
+    .page-header h1 { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; }
+    .disc-card { border-radius: 16px; background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,0.07); overflow: hidden; height: 100%; }
+    .disc-header { padding: 24px; text-align: center; color: #fff; }
+    .disc-icon { font-size: 48px; margin-bottom: 12px; }
+    footer { background: #0f172a; color: rgba(255,255,255,0.6); padding: 40px 0; font-size: 13px; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'public_home' %}">
+      <img src="/static/img/logo-ligue.png" alt="LATO" style="height:36px;">
+      LATO
+    </a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#nav" style="filter:invert(1);">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav me-auto gap-1">
+         <li class="nav-item"><a class="nav-link" href="{% url 'public_home' %}">Accueil</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'public_home' %}#historique">Histoire</a></li>  
+        <li class="nav-item"><a class="nav-link" href="{% url 'public_disciplines' %}">Disciplines</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'public_clubs' %}">Clubs</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'public_inscription'%}">Inscriptions</a></li>
+      </ul>
+      <a href="{% url 'login' %}" class="btn btn-espace">
+        <i class="bi bi-box-arrow-in-right me-1"></i>Espace membres
+      </a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1><i class="bi bi-trophy me-3"></i>Découvrir l'Athlétisme</h1>
+    <p style="opacity:0.8;margin-top:8px;">Les disciplines pratiquées dans nos clubs affiliés</p>
+  </div>
+</div>
+
+<section style="padding:60px 0;">
+  <div class="container">
+    <div class="row g-4">
+
+      <div class="col-md-6 col-lg-3">
+        <div class="disc-card">
+          <div class="disc-header" style="background:linear-gradient(135deg,#1e3a8a,#0f172a)">
+            
+            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;">Sprints</div>
+          </div>
+          <div style="padding:20px;">
+            <p style="font-size:13px;color:#64748b;">Les épreuves de vitesse pure sur courte distance.</p>
+            <div class="d-flex flex-wrap gap-2">
+              <span class="badge" style="background:#eff6ff;color:#1e3a8a;">100m</span>
+              <span class="badge" style="background:#eff6ff;color:#1e3a8a;">200m</span>
+              <span class="badge" style="background:#eff6ff;color:#1e3a8a;">400m</span>
+              <span class="badge" style="background:#eff6ff;color:#1e3a8a;">110m Haies</span>
+              <span class="badge" style="background:#eff6ff;color:#1e3a8a;">400m Haies</span>
+              <span class="badge" style="background:#eff6ff;color:#1e3a8a;">Relais 4x100m</span>
+              <span class="badge" style="background:#eff6ff;color:#1e3a8a;">Relais 4x400m</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="disc-card">
+          <div class="disc-header" style="background:linear-gradient(135deg,#16a34a,#052e16)">
+            
+            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;">Demi-fond & Fond</div>
+          </div>
+          <div style="padding:20px;">
+            <p style="font-size:13px;color:#64748b;">Les épreuves d'endurance sur moyenne et longue distance.</p>
+            <div class="d-flex flex-wrap gap-2">
+              <span class="badge" style="background:#f0fdf4;color:#16a34a;">800m</span>
+              <span class="badge" style="background:#f0fdf4;color:#16a34a;">1500m</span>
+              <span class="badge" style="background:#f0fdf4;color:#16a34a;">3000m</span>
+              <span class="badge" style="background:#f0fdf4;color:#16a34a;">5000m</span>
+              <span class="badge" style="background:#f0fdf4;color:#16a34a;">10000m</span>
+              <span class="badge" style="background:#f0fdf4;color:#16a34a;">Marathon</span>
+              <span class="badge" style="background:#f0fdf4;color:#16a34a;">Cross Country</span>
+              <span class="badge" style="background:#f0fdf4;color:#16a34a;">3000m Steeple</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="disc-card">
+          <div class="disc-header" style="background:linear-gradient(135deg,#d97706,#78350f)">
+        
+            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;">Sauts</div>
+          </div>
+          <div style="padding:20px;">
+            <p style="font-size:13px;color:#64748b;">Les épreuves techniques de saut en hauteur, longueur et perche.</p>
+            <div class="d-flex flex-wrap gap-2">
+              <span class="badge" style="background:#fffbeb;color:#d97706;">Saut en Hauteur</span>
+              <span class="badge" style="background:#fffbeb;color:#d97706;">Saut en Longueur</span>
+              <span class="badge" style="background:#fffbeb;color:#d97706;">Triple Saut</span>
+              <span class="badge" style="background:#fffbeb;color:#d97706;">Saut à la Perche</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="disc-card">
+          <div class="disc-header" style="background:linear-gradient(135deg,#dc2626,#450a0a)">
+            
+            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;">Lancers</div>
+          </div>
+          <div style="padding:20px;">
+            <p style="font-size:13px;color:#64748b;">Les épreuves de force et de technique avec différents engins.</p>
+            <div class="d-flex flex-wrap gap-2">
+              <span class="badge" style="background:#fef2f2;color:#dc2626;">Lancer du Poids</span>
+              <span class="badge" style="background:#fef2f2;color:#dc2626;">Lancer du Disque</span>
+              <span class="badge" style="background:#fef2f2;color:#dc2626;">Lancer du Javelot</span>
+              <span class="badge" style="background:#fef2f2;color:#dc2626;">Lancer du Marteau</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mt-5">
+      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:24px;color:var(--primary);margin-bottom:8px;">Épreuves combinées</div>
+      <div style="color:#64748b;font-size:14px;margin-bottom:24px;">Pour les athlètes polyvalents</div>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div style="background:#fff;border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+            <div style="font-weight:700;color:var(--primary);margin-bottom:8px;"><i class="bi bi-star me-2"></i>Décathlon (Hommes)</div>
+            <div style="font-size:13px;color:#64748b;">100m · Longueur · Poids · Hauteur · 400m · 110m Haies · Disque · Perche · Javelot · 1500m</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div style="background:#fff;border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+            <div style="font-weight:700;color:var(--primary);margin-bottom:8px;"><i class="bi bi-star me-2"></i>Heptathlon (Femmes)</div>
+            <div style="font-size:13px;color:#64748b;">100m Haies · Hauteur · Poids · 200m · Longueur · Javelot · 800m</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer style="background:#0f172a;color:rgba(255,255,255,0.55);padding:50px 0 28px;font-size:13px;">
+  <div class="container">
+    <div class="row g-4 mb-4">
+      <div class="col-md-4">
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:#fff;margin-bottom:8px;">LATO</div>
+        <div>Ligue d'Athlétisme de Tizi Ouzou<br>Wilaya 15 — Algérie</div>
+        <div class="d-flex gap-3 mt-3">
+          <img src="/static/img/logo-ligue.png" alt="LATO" style="height:36px;opacity:0.7;">
+          <img src="/static/img/logo-federation.png" alt="FAA" style="height:36px;opacity:0.7;">
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div style="color:#fff;font-weight:600;font-size:13px;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;">Navigation</div>
+        <div class="d-flex flex-column gap-2">
+          <a href="{% url 'public_clubs' %}" style="color:rgba(255,255,255,0.55);text-decoration:none;">Annuaire des clubs</a>
+          <a href="{% url 'public_disciplines' %}" style="color:rgba(255,255,255,0.55);text-decoration:none;">Disciplines</a>
+          <a href="{% url 'public_home' %}#historique" style="color:rgba(255,255,255,0.55);text-decoration:none;">Histoire de la ligue</a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div style="color:#fff;font-weight:600;font-size:13px;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;">Espace membres</div>
+        <div class="d-flex flex-column gap-2">
+          <a href="{% url 'login' %}" style="color:rgba(255,255,255,0.55);text-decoration:none;">Connexion</a>
+        </div>
+        <div class="mt-4" style="font-size:12px;color:rgba(255,255,255,0.35);">
+          Les comptes sont créés par la Ligue.<br>Contactez un club affilié pour rejoindre la plateforme.
+        </div>
+      </div>
+    </div>
+    <hr style="border-color:rgba(255,255,255,0.08);margin:20px 0;">
+    <div class="text-center" style="font-size:12px;">
+      © 2026 Ligue d'Athlétisme de Tizi Ouzou — Tous droits réservés
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

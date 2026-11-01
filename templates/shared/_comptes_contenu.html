@@ -1,0 +1,65 @@
+<div class="section-header">
+  <div>
+    <div class="section-title">Comptes &amp; mots de passe</div>
+    <div class="section-sub">{{ page.paginator.count }} compte{{ page.paginator.count|pluralize }}
+      &mdash; réinitialiser génère un mot de passe temporaire que la personne doit changer à sa prochaine connexion.</div>
+  </div>
+</div>
+
+<form method="get" class="d-flex gap-2 mb-3 flex-wrap">
+  <input type="search" name="q" value="{{ q }}" class="form-control form-control-sm" style="max-width:280px;" placeholder="Nom, prénom ou email">
+  {% if est_ligue %}
+  <select name="role" class="form-select form-select-sm" style="max-width:180px;">
+    <option value="">Tous les rôles</option>
+    <option value="club_admin" {% if role_filtre == 'club_admin' %}selected{% endif %}>Admins de club</option>
+    <option value="coach" {% if role_filtre == 'coach' %}selected{% endif %}>Coaches</option>
+    <option value="athlete" {% if role_filtre == 'athlete' %}selected{% endif %}>Athlètes</option>
+  </select>
+  {% else %}
+  <select name="role" class="form-select form-select-sm" style="max-width:180px;">
+    <option value="">Coaches et athlètes</option>
+    <option value="coach" {% if role_filtre == 'coach' %}selected{% endif %}>Coaches</option>
+    <option value="athlete" {% if role_filtre == 'athlete' %}selected{% endif %}>Athlètes</option>
+  </select>
+  {% endif %}
+  <button type="submit" class="btn btn-outline-jsk btn-sm">Filtrer</button>
+</form>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-custom mb-0">
+      <thead><tr><th>Nom</th><th>Rôle</th>{% if est_ligue %}<th>Club</th>{% endif %}<th>Email</th><th>Mot de passe</th><th></th></tr></thead>
+      <tbody>
+      {% for c in page %}
+      <tr>
+        <td style="font-weight:600">{{ c.prenom }} {{ c.nom }}</td>
+        <td>{% if c.role == 'club_admin' %}Admin de club{% elif c.role == 'coach' %}Coach{% else %}Athlète{% endif %}</td>
+        {% if est_ligue %}<td>{{ c.club.nom|default:"--" }}</td>{% endif %}
+        <td style="font-size:12px;color:#6c757d">{{ c.email }}</td>
+        <td>
+          {% if c.must_change_password %}<span class="badge badge-jsk-red">Temporaire</span>
+          {% else %}<span class="badge badge-jsk-green">Défini par l'utilisateur</span>{% endif %}
+        </td>
+        <td class="text-end">
+          <form method="post" action="{% url 'reinitialiser_mdp' c.pk %}" class="d-inline"
+                onsubmit="return confirm('Réinitialiser le mot de passe de {{ c.prenom|escapejs }} {{ c.nom|escapejs }} ? Son mot de passe actuel ne fonctionnera plus et ses sessions ouvertes seront fermées.')">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-key me-1"></i>Réinitialiser</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="{% if est_ligue %}6{% else %}5{% endif %}" class="text-center py-4 text-muted">Aucun compte</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% if page.has_other_pages %}
+<div class="d-flex justify-content-center gap-2 mt-3 align-items-center" style="font-size:13px;">
+  {% if page.has_previous %}<a class="btn btn-outline-jsk btn-sm" href="?page={{ page.previous_page_number }}&q={{ q|urlencode }}&role={{ role_filtre }}">&laquo; Précédent</a>{% endif %}
+  <span>Page {{ page.number }} / {{ page.paginator.num_pages }}</span>
+  {% if page.has_next %}<a class="btn btn-outline-jsk btn-sm" href="?page={{ page.next_page_number }}&q={{ q|urlencode }}&role={{ role_filtre }}">Suivant &raquo;</a>{% endif %}
+</div>
+{% endif %}

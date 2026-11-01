@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="mb-4 text-success" style="font-size: 50px;">🎉</div>
+            
+            <h2 class="fw-bold mb-2" style="color: #23272b;">Athlète enregistré !</h2>
+            <p class="text-muted mb-4">
+                Le profil de <strong>{{ athlete.nom_complet }}</strong> a bien été créé avec le statut <span class="badge badge-jsk-orange">Incomplet</span>.
+            </p>
+
+            <div class="card p-4 border-0 shadow-sm mb-4" style="background-color: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0 !important;">
+                <h5 class="fw-semibold mb-2" style="color: #0056b3;">Prochaine étape importante</h5>
+                <p class="small text-secondary mb-3">
+                    Pour que la Ligue puisse valider définitivement sa licence, cet athlète doit obligatoirement passer sa visite médicale. Génère la fiche pré-remplie ci-dessous pour qu'il la présente à son médecin.
+                </p>
+                
+                <div class="d-grid gap-2 col-10 mx-auto">
+                    <a href="{% url 'generer_fiche_medicale' athlete.id %}" target="_blank" class="btn btn-jsk btn-lg d-flex align-items-center justify-content-center gap-2" style="font-size: 14px; font-weight: 600; height: 46px; border-radius: 10px;">
+                        📄 Imprimer la demande et le Certificat Médical
+                    </a>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center gap-2">
+                <a href="{% url 'club_athletes' %}" class="btn btn-outline-secondary btn-sm px-3" style="border-radius: 20px; font-size: 12px; font-weight: 600;">
+                    Retour à la liste des athlètes
+                </a>
+                <a href="{% url 'athlete_creer' %}" class="btn btn-light btn-sm px-3" style="border-radius: 20px; border: 1px solid #e2e8f0; font-size: 12px; font-weight: 600;">
+                    + Ajouter un autre athlète
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

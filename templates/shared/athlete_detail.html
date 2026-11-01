@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}{{ athlete.nom_complet }}{% endblock %}
+{% block page_title %}Fiche Athlete{% endblock %}
+{% block sidebar_nav %}
+{% if role == 'ligue' %}
+<div class="nav-item"><a class="nav-link-custom" href="{% url 'ligue_dashboard' %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.house|safe }}</span></div><span>Dashboard</span></a></div>
+<div class="nav-item"><a class="nav-link-custom active" href="{% url 'ligue_athletes' %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span></div><span>Athletes</span></a></div>
+{% elif role == 'club_admin' %}
+<div class="nav-item"><a class="nav-link-custom" href="{% url 'club_dashboard' %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.house|safe }}</span></div><span>Dashboard</span></a></div>
+<div class="nav-item"><a class="nav-link-custom active" href="{% url 'club_athletes' %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span></div><span>Athletes</span></a></div>
+{% else %}
+<div class="nav-item"><a class="nav-link-custom" href="{% url 'coach_dashboard' %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.house|safe }}</span></div><span>Dashboard</span></a></div>
+<div class="nav-item"><a class="nav-link-custom active" href="{% url 'coach_athletes' %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span></div><span>Mon groupe</span></a></div>
+{% endif %}
+{% endblock %}
+{% block content %}
+<div class="section-header">
+  <div><div class="section-title">{{ athlete.nom_complet }}</div><div class="section-sub">{{ athlete.categorie }} - {{ athlete.club.nom|default:"--" }}</div></div>
+  <a href="javascript:history.back()" class="btn btn-outline-jsk"><i class="bi bi-arrow-left me-1"></i>Retour</a>
+</div>
+<div class="row g-3">
+  <div class="col-lg-4">
+
+    
+    <div class="card p-4 text-center mb-3">
+      <div class="avatar avatar-xl mx-auto mb-3">{{ athlete.initiales }}</div>
+      <div style="font-size:19px;font-weight:800">{{ athlete.nom_complet }}</div>
+      <div style="font-size:13px;color:#6c757d;margin-bottom:10px">{{ athlete.club.nom|default:"--" }} - {{ athlete.categorie }}</div>
+      {% if athlete.statut_licence == 'licencie' %}
+        <span class="badge badge-jsk-green"><i class="bi bi-award me-1"></i>{{ athlete.licence_no }}</span>
+      {% else %}
+        <span class="badge badge-jsk-yellow">{{ athlete.get_statut_licence_display }}</span>
+      {% endif %}
+      <hr>
+      <div style="text-align:left">
+        <div class="d-flex justify-content-between py-2 border-bottom"><span style="font-size:12px;color:#6c757d">Age</span><span style="font-size:12px;font-weight:600">{% if athlete.age %}{{ athlete.age }} ans{% else %}--{% endif %}</span></div>
+        <div class="d-flex justify-content-between py-2 border-bottom"><span style="font-size:12px;color:#6c757d">Sexe</span><span style="font-size:12px;font-weight:600">{% if athlete.sexe == 'M' %}Masculin{% else %}Feminin{% endif %}</span></div>
+        <div class="d-flex justify-content-between py-2 border-bottom"><span style="font-size:12px;color:#6c757d">Coach</span><span style="font-size:12px;font-weight:600">{{ athlete.coach.nom|default:"--" }}</span></div>
+        <div class="d-flex justify-content-between py-2"><span style="font-size:12px;color:#6c757d">Groupe</span><span style="font-size:12px;font-weight:600">{{ athlete.groupe|default:"--" }}</span></div>
+      </div>
+    </div>
+
+    
+    <div class="card p-4 mb-3">
+      <h6 class="card-title-custom mb-3">Records Personnels</h6>
+      <div class="row g-2">
+      {% for epr, pb in pbs.items %}
+      <div class="col-6"><div style="background:var(--jsk-green-light);border-radius:10px;padding:10px;text-align:center">
+        <div style="font-size:10px;color:var(--jsk-green);font-weight:600">{{ epr }}</div>
+        <div style="font-size:20px;font-weight:800;color:var(--jsk-green)">{{ pb.perf }}</div>
+        {% if pb.record_wilaya %}<div style="font-size:9px;color:var(--jsk-yellow-dark)">★ RW</div>{% endif %}
+      </div></div>
+      {% empty %}<div class="col-12 text-center text-muted py-2" style="font-size:12px">Aucun PB</div>{% endfor %}
+      </div>
+    </div>
+
+    
+    {% if athlete.statut_licence == 'licencie' %}
+
+    <div class="card p-4 mb-3">
+      <h6 class="card-title-custom mb-3"><i class="bi bi-file-medical me-2"></i>Certificat Médical</h6>
+      {% if athlete.cert_medical_img %}
+        <span class="badge badge-jsk-green mb-2"><i class="bi bi-check-circle me-1"></i>Fourni</span>
+        <a href="{{ athlete.cert_medical_img.url }}" target="_blank">
+          <img src="{{ athlete.cert_medical_img.url }}" alt="Certificat médical"
+               style="width:100%;border-radius:10px;border:1px solid #e2e8f0;margin-top:8px;">
+        </a>
+      {% else %}
+        <span class="badge badge-jsk-yellow"><i class="bi bi-exclamation-circle me-1"></i>Non fourni</span>
+        <p style="font-size:12px;color:#6c757d;margin-top:8px;margin-bottom:0">Aucun certificat soumis.</p>
+      {% endif %}
+    </div>
+
+    <div class="card p-4" style="border:2px solid var(--jsk-green);border-radius:16px;">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="card-title-custom mb-0"><i class="bi bi-award me-2" style="color:var(--jsk-green)"></i>Licence Officielle</h6>
+        <a href="{% url 'telecharger_licence' athlete.pk %}" class="btn btn-jsk btn-sm"><i class="bi bi-download me-1"></i>Télécharger</a>
+      </div>
+      <div style="background:linear-gradient(135deg,var(--primary-blue) 0%,#0f172a 100%);border-radius:12px;padding:20px;color:#fff;">
+        <div style="font-size:10px;opacity:0.7;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">Ligue d'Athlétisme de Tizi Ouzou</div>
+        <div style="font-size:20px;font-weight:800;font-family:'Syne',sans-serif;margin-bottom:2px">{{ athlete.nom_complet }}</div>
+        <div style="font-size:13px;opacity:0.8;margin-bottom:12px">{{ athlete.categorie }} — {{ athlete.get_sexe_display }}</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-end">
+          <div>
+            <div style="font-size:10px;opacity:0.6;">N° Licence</div>
+            <div style="font-size:18px;font-weight:800;color:#f59e0b">{{ athlete.licence_no }}</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:10px;opacity:0.6;">Saison</div>
+            <div style="font-size:14px;font-weight:600">2025-2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% endif %}
+
+  </div>
+
+  <div class="col-lg-8">
+    <div class="card p-4">
+      <h6 class="card-title-custom mb-3">Historique des performances</h6>
+      <div class="table-responsive"><table class="table table-custom mb-0">
+        <thead><tr><th>Date</th><th>Epreuve</th><th>Performance</th><th>Lieu</th><th>Badge</th></tr></thead>
+        <tbody>
+        {% for p in perfs %}<tr>
+          <td style="font-size:13px;color:#6c757d">{{ p.date|date:"d/m/Y" }}</td>
+          <td style="font-size:13px;font-weight:600">{{ p.epreuve }}</td>
+          <td><strong style="color:var(--jsk-green);font-size:15px">{{ p.performance }}</strong></td>
+          <td style="font-size:12px;color:#adb5bd">{{ p.lieu }}</td>
+          <td>{% if p.record_wilaya %}<span class="badge badge-jsk-yellow"><i class="bi bi-star-fill me-1"></i>RW</span>{% else %}<span class="badge badge-jsk-gray">--</span>{% endif %}</td>
+        </tr>{% empty %}<tr><td colspan="5" class="text-center py-3 text-muted">Aucune performance</td></tr>{% endfor %}
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Modifier Club{% endblock %}
+{% block page_title %}Modifier un Club{% endblock %}
+{% block sidebar_nav %}
+<span class="nav-section-label">Navigation</span>
+<div class="nav-item"><a class="nav-link-custom" href="{% url 'ligue_dashboard' %}"><div class="nav-icon-wrap">{{ ICONS.house|safe }}</div><span>Dashboard</span></a></div>
+<div class="nav-item"><a class="nav-link-custom active" href="{% url 'ligue_clubs' %}"><div class="nav-icon-wrap">{{ ICONS.buildings|safe }}</div><span>Clubs</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url 'ligue_athletes' %}"><div class="nav-icon-wrap">{{ ICONS.users_three|safe }}</div><span>Athletes</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url 'ligue_licences' %}"><div class="nav-icon-wrap">{{ ICONS.identification_card|safe }}</div><span>Licences</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url 'ligue_records' %}"><div class="nav-icon-wrap">{{ ICONS.trophy|safe }}</div><span>Records Wilaya</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url 'ligue_calendrier' %}"><div class="nav-icon-wrap">{{ ICONS.calendar|safe }}</div><span>Calendrier</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url 'ligue_bilan' %}"><div class="nav-icon-wrap">{{ ICONS.medal|safe }}</div><span>Bilan Saisonnier</span></a></div>
+<span class="nav-section-label">Systeme</span>
+<div class="nav-item"><a class="nav-link-custom" href="/admin/"><div class="nav-icon-wrap">{{ ICONS.gear|safe }}</div><span>Administration</span></a></div>
+{% endblock %}
+{% block content %}
+<div class="section-header">
+  <div><div class="section-title">Modifier — {{ club.nom }}</div></div>
+  <a href="{% url 'ligue_clubs' %}" class="btn btn-outline-secondary">Annuler</a>
+</div>
+<div class="card p-4" style="max-width:600px">
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label class="form-label">Nom du club</label>
+      <input type="text" name="nom" class="form-control" value="{{ club.nom }}" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Ville</label>
+      <input type="text" name="ville" class="form-control" value="{{ club.ville }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input type="email" name="email" class="form-control" value="{{ club.email }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Téléphone</label>
+      <input type="text" name="telephone" class="form-control" value="{{ club.telephone }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Informations légales</label>
+      <textarea name="informations_legales" class="form-control" rows="3">{{ club.informations_legales }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-jsk w-100">Enregistrer les modifications</button>
+  </form>
+</div>
+{% endblock %}

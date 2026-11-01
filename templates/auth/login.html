@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block title %}Connexion | LATO{% endblock %}
+{% block auth_content %}
+<style>
+  body {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, #0f172a 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  body::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -120px;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+    pointer-events: none;
+  }
+  .login-wrap {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+    max-width: 950px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+  }
+  .login-hero { flex: 1; color: #fff; display: none; }
+  @media (min-width: 768px) { .login-hero { display: block; } }
+  .hero-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+  .hero-accent { color: var(--gold-2); }
+  .hero-sub { font-size: 15px; opacity: 0.75; line-height: 1.6; max-width: 360px; }
+  .login-card {
+    background: #fff;
+    border-radius: 22px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 440px;
+    padding: 38px;
+    flex-shrink: 0;
+  }
+  .login-logo-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .dual-logos { display: flex; gap: 8px; }
+  .login-logo-box {
+    width: 48px; height: 48px;
+    object-fit: contain;
+    border-radius: 10px;
+    background: #f1f5f9;
+    padding: 4px;
+    border: 1px solid var(--border);
+  }
+  .login-brand-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px; font-weight: 800;
+    color: var(--primary-blue); line-height: 1.1;
+  }
+  .login-brand-sub { font-size: 11px; color: var(--text-3); font-weight: 500; }
+  .login-heading { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+  .login-sub { font-size: 13px; color: var(--text-3); margin-bottom: 22px; }
+  .auth-link {
+    color: var(--secondary-blue);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: color 0.15s;
+  }
+  .auth-link:hover {
+    color: var(--primary-blue);
+    text-decoration: underline;
+  }
+</style>
+
+
+<div class="login-wrap">
+  <div class="login-hero">
+    <div class="d-flex gap-3 align-items-center mb-4">
+      <img src="/static/img/logo-ligue.png" alt="LATO" style="width:64px; height:64px; object-fit:contain; filter:drop-shadow(0 4px 12px rgba(0,0,0,0.15));">
+      <img src="/static/img/logo-federation.png" alt="FAA" style="width:64px; height:64px; object-fit:contain; background:#fff; padding:4px; border-radius:8px; filter:drop-shadow(0 4px 12px rgba(0,0,0,0.15));">
+    </div>
+    <h1 class="hero-title">
+      LATO<br><span class="hero-accent">Athlétisme</span>
+    </h1>
+    <p class="hero-sub">Plateforme officielle de gestion et de suivi des performances de la Ligue d'Athlétisme de Tizi Ouzou.</p>
+  </div>
+
+
+  <div class="login-card">
+    <div class="login-logo-container">
+      <div class="dual-logos">
+        <img src="/static/img/logo-ligue.png" alt="LATO" class="login-logo-box">
+        <img src="/static/img/logo-federation.png" alt="FAA" class="login-logo-box" style="background:#fff;">
+      </div>
+      <div>
+        <div class="login-brand-name">LATO</div>
+        <div class="login-brand-sub">Ligue d'Athlétisme de Tizi Ouzou</div>
+      </div>
+    </div>
+
+
+    <h2 class="login-heading">Connexion</h2>
+    <p class="login-sub">Accédez à votre espace de gestion</p>
+
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label">Adresse email</label>
+        <input type="email" name="email" class="form-control" placeholder="votre@email.dz" required autofocus>
+      </div>
+      <div class="mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <label class="form-label mb-0">Mot de passe</label>
+        </div>
+        <input type="password" name="mot_de_passe" class="form-control" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn btn-jsk w-100 py-2 mt-2" style="font-size:15px; font-family:'Syne',sans-serif; font-weight:700; letter-spacing:0.01em;">
+        Se connecter &rarr;
+      </button>
+      <div class="text-center mt-3">
+<a href="{% url 'public_home' %}" class="auth-link">
+  <i class="bi bi-arrow-left me-1"></i>Retour à l'accueil
+</a>
+</div>
+    </form>
+  </div>
+</div>
+
+
+<p style="position:fixed; bottom:18px; left:50%; transform:translateX(-50%); font-size:11px; color:rgba(255,255,255,0.3); white-space:nowrap;">
+  &copy; 2026 Ligue d'Athlétisme de Tizi Ouzou (LATO)
+</p>
+{% endblock %}

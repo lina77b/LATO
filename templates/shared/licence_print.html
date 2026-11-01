@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Licence - {{ athlete.nom_complet }}</title>
+  <style>
+    body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; background: #f0f0f0; }
+    .licence {
+      width: 85mm; height: 54mm;
+      background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+      border-radius: 12px; padding: 16px; color: #fff;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .org { font-size: 7px; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+    .nom { font-size: 16px; font-weight: 800; margin-bottom: 2px; }
+    .cat { font-size: 10px; opacity: 0.8; margin-bottom: 10px; }
+    .bottom { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 10px; }
+    .label { font-size: 7px; opacity: 0.6; }
+    .no { font-size: 14px; font-weight: 800; color: #f59e0b; }
+    .saison { font-size: 11px; font-weight: 600; }
+    .print-btn { display: block; text-align: center; margin: 20px auto; padding: 10px 30px; background: #1e3a8a; color: #fff; border: none; border-radius: 8px; font-size: 15px; cursor: pointer; }
+    @media print { .print-btn { display: none; } body { background: #fff; } }
+  </style>
+</head>
+<body>
+  <div>
+    <div class="licence">
+      <div class="org">Ligue d'Athlétisme de Tizi Ouzou</div>
+      <div class="nom">{{ athlete.nom_complet }}</div>
+      <div class="cat">{{ athlete.categorie }} — {{ athlete.get_sexe_display }}</div>
+      <div class="bottom">
+        <div>
+          <div class="label">N° Licence</div>
+          <div class="no">{{ athlete.licence_no }}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="label">Saison</div>
+          <div class="saison">2025-2026</div>
+        </div>
+      </div>
+    </div>
+    <button class="print-btn" onclick="window.print()">🖨️ Imprimer / Télécharger PDF</button>
+  </div>
+</body>
+</html>

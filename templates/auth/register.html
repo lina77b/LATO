@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+{% block title %}Inscription | LATO{% endblock %}
+{% block auth_content %}
+<style>
+  body {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, #0f172a 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -120px;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+    pointer-events: none;
+  }
+  .register-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    max-width: 1000px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+  }
+  .register-hero { 
+    flex: 1; 
+    color: #fff; 
+    display: none; 
+  }
+  @media (min-width: 992px) { 
+    .register-hero { display: block; } 
+  }
+  .hero-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+  .hero-accent { color: var(--gold-2); }
+  .hero-sub { font-size: 15px; opacity: 0.75; line-height: 1.6; max-width: 380px; }
+  .register-card {
+    background: #fff;
+    border-radius: 22px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 560px;
+    padding: 30px;
+    flex-shrink: 0;
+  }
+  .register-logo-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border);
+  }
+  .dual-logos { display: flex; gap: 8px; }
+  .register-logo-box {
+    width: 44px; height: 44px;
+    object-fit: contain;
+    border-radius: 10px;
+    background: #f1f5f9;
+    padding: 4px;
+    border: 1px solid var(--border);
+  }
+  .register-brand-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px; font-weight: 800;
+    color: var(--primary-blue); line-height: 1.1;
+  }
+  .register-brand-sub { font-size: 11px; color: var(--text-3); font-weight: 500; }
+  .register-heading { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 2px; }
+  .register-sub { font-size: 13px; color: var(--text-3); margin-bottom: 18px; }
+  .form-label { font-size: 13px; margin-bottom: 4px; }
+  .form-control, .form-select { padding: 7px 12px; font-size: 14px; }
+  .auth-link {
+    color: var(--secondary-blue);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: color 0.15s;
+  }
+  .auth-link:hover {
+    color: var(--primary-blue);
+    text-decoration: underline;
+  }
+</style>
+
+<div class="register-wrap">
+  <div class="register-hero">
+    <div class="d-flex gap-3 align-items-center mb-4">
+      <img src="/static/img/logo-ligue.png" alt="LATO" style="width:60px; height:60px; object-fit:contain; filter:drop-shadow(0 4px 12px rgba(0,0,0,0.15));">
+      <img src="/static/img/logo-federation.png" alt="FAA" style="width:60px; height:60px; object-fit:contain; background:#fff; padding:4px; border-radius:8px; filter:drop-shadow(0 4px 12px rgba(0,0,0,0.15));">
+    </div>
+    <h1 class="hero-title">
+      LATO<br><span class="hero-accent">Inscription</span>
+    </h1>
+    <p class="hero-sub">Créez votre profil athlète pour suivre vos performances, gérer vos licences et participer aux compétitions de la ligue.</p>
+  </div>
+
+  <div class="register-card">
+    <div class="register-logo-container">
+      <div class="dual-logos">
+        <img src="/static/img/logo-ligue.png" alt="LATO" class="register-logo-box">
+        <img src="/static/img/logo-federation.png" alt="FAA" class="register-logo-box" style="background:#fff;">
+      </div>
+      <div>
+        <div class="register-brand-name">LATO</div>
+        <div class="register-brand-sub">Espace Athlètes</div>
+      </div>
+    </div>
+
+    <h2 class="register-heading">Inscription</h2>
+    <p class="register-sub">Formulaire de demande de licence athlète</p>
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="row g-2">
+        <div class="col-sm-6 mb-2">
+          <label class="form-label">Nom</label>
+          <input type="text" name="nom" class="form-control" placeholder="Votre nom" required>
+        </div>
+        <div class="col-sm-6 mb-2">
+          <label class="form-label">Prénom</label>
+          <input type="text" name="prenom" class="form-control" placeholder="Votre prénom" required>
+        </div>
+      </div>
+
+      <div class="row g-2">
+        <div class="col-sm-6 mb-2">
+          <label class="form-label">Date de naissance</label>
+          <input type="date" name="date_naissance" class="form-control" required>
+        </div>
+        <div class="col-sm-6 mb-2">
+          <label class="form-label">Sexe</label>
+          <select name="sexe" class="form-select" required>
+            <option value="" disabled selected>Choisir...</option>
+            <option value="M">Homme</option>
+            <option value="F">Femme</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label">Club affilié</label>
+        <select name="club" class="form-select" required>
+          <option value="" disabled selected>Sélectionnez votre club...</option>
+          {% for club in clubs %}
+            <option value="{{ club.id }}">{{ club.nom }}</option>
+          {% empty %}
+            <option value="1">JS Kabylie (JSK)</option>
+            <option value="2">AM Tizi Ouzou (AMTO)</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label">Adresse email</label>
+        <input type="email" name="email" class="form-control" placeholder="votre@email.dz" required>
+      </div>
+
+      <div class="row g-2 mb-3">
+        <div class="col-sm-6">
+          <label class="form-label">Mot de passe</label>
+          <input type="password" name="mot_de_passe" class="form-control" placeholder="••••••••" required>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label">Confirmation</label>
+          <input type="password" name="confirmation_mot_de_passe" class="form-control" placeholder="••••••••" required>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-jsk w-100 py-2 mt-1" style="font-size:14px; font-family:'Syne',sans-serif; font-weight:700; letter-spacing:0.01em;">
+        Soumettre ma demande &rarr;
+      </button>
+    </form>
+
+    <div class="text-center mt-3">
+      <span style="font-size: 13px; color: var(--text-3);">Vous avez déjà un compte ?</span>
+      <a href="{% url 'login' %}" class="auth-link ms-1">Connexion</a>
+    </div>
+  </div>
+</div>
+
+<p style="position:fixed; bottom:12px; left:50%; transform:translateX(-50%); font-size:10px; color:rgba(255,255,255,0.25); white-space:nowrap; pointer-events:none;">
+  &copy; 2026 Ligue d'Athlétisme de Tizi Ouzou (LATO)
+</p>
+{% endblock %}

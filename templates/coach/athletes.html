@@ -1,0 +1,38 @@
+
+{% extends "base.html" %}
+{% block title %}Mon Groupe{% endblock %}
+{% block page_title %}Mon Groupe{% endblock %}
+{% block sidebar_nav %}<span class="nav-section-label">Entrainement</span>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "coach_dashboard" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.house|safe }}</span></div><span>Dashboard</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "coach_seances" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.timer|safe }}</span></div><span>Mes Seances</span></a></div>
+<div class="nav-item"><a class="nav-link-custom active" href="{% url "coach_athletes" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.users_three|safe }}</span></div><span>Mon Groupe</span></a></div>
+<div class="nav-item"><a class="nav-link-custom" href="{% url "coach_progressions" %}"><div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.chart_line_up|safe }}</span></div><span>Suivi Athlètes </span></a></div>
+<div class="nav-item">
+  <a class="nav-link-custom" href="{% url 'club_calendrier' %}">
+    <div class="nav-icon-wrap"><span class="nav-icon-img ico-white" style="display:inline-flex;align-items:center;">{{ ICONS.calendar|safe }}</span></div>
+    <span>Calendrier</span>
+  </a>
+</div>
+{% endblock %}
+{% block content %}
+<div class="section-header"><div class="section-title">Mon Groupe ({{ athletes|length }} athletes)</div></div>
+<div class="row g-3">
+{% for a in athletes %}<div class="col-md-6 col-lg-4">
+  <div class="card p-4 h-100" style="cursor:pointer" onclick="location.href='{% url 'athlete_progression' a.pk %}'">
+    <div class="text-center mb-3">
+      <div class="avatar avatar-xl mx-auto mb-2">{{ a.initiales }}</div>
+      <div style="font-weight:700;font-size:15px">{{ a.nom_complet }}</div>
+      <div style="font-size:12px;color:#6c757d">{{ a.categorie }} - {{ a.get_sexe_display }}</div>
+      <div class="mt-2">
+        {% if a.statut_licence == 'licencie' %}<span class="badge badge-jsk-green">Licencie</span>{% else %}<span class="badge badge-jsk-yellow">En cours</span>{% endif %}
+      </div>
+    </div>
+    <div style="background:var(--jsk-green-light);border-radius:10px;padding:10px;text-align:center;margin-bottom:10px">
+      <div style="font-size:11px;color:var(--jsk-green);font-weight:600;margin-bottom:4px">Epreuves</div>
+      <div style="font-size:13px;font-weight:600;color:var(--jsk-green)">{{ a.epreuves|join:" / "|truncatechars:28 }}</div>
+    </div>
+    <a href="{% url 'athlete_progression' a.pk %}" class="btn btn-jsk btn-sm w-100"><i class="bi bi-graph-up me-1"></i>Voir progression</a>
+  </div>
+</div>{% empty %}<div class="col-12 text-center py-5 text-muted">Aucun athlete assigne</div>{% endfor %}
+</div>
+{% endblock %}
